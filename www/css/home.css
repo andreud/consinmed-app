@@ -1,0 +1,12 @@
+#listaMarcas div.marca-home div.inner{
+	/*background-color: #ddd;*/
+	/*margin: 1px;*/
+	padding: 0 5px;
+	border-radius: 10px;
+	text-align: center;
+}
+
+#menuHome a.btn{
+	text-align: left;
+	padding-left: 33%;
+}

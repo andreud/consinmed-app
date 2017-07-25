@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <!-- <link rel="stylesheet" type="text/css" href="css/index.css"> -->
+        <link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/global.css">
+
+        <title>Consinmed</title>
+    </head>
+    <body>
+        
+        <div id="Navbar"></div>
+
+        <!-- HistoricoPedidosVue -->   
+        <div id="HistoricoPedidosVue">
+            
+            <h6>Histórico de Pedidos</h6>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Cliente</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Ver</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="pedido in pedidos">
+                        <td>{{pedido.id}}</td>
+                        <td>{{pedido.created_at}}</td>
+                        <td>{{pedido.cliente.razon_social}}</td>
+                        <td>{{pedido.total}}</td>
+                        <td>{{pedido.status}}</td>
+                        <td><button v-on:click="irAPedido(pedido.id)" class="btn btn-sm">Ver</button></td>
+                    </tr>
+                    <!-- <tr>
+                        <th colspan="2">Cond Pago / Despacho</th>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <th colspan="2">Notas</th>
+                        <td colspan="3"></td>
+                    </tr>
+                    <th>
+                        
+                    </th> -->
+                </tbody>
+            </table>
+            
+     
+  
+        </div>
+        <!-- fin HistoricoPedidosVue -->
+
+
+    
+        
+        <script src="cordova.js"></script>
+        <script src="js/libs/lodash.js"></script>
+        <script src="js/libs/vue.js"></script>
+        <script src="js/data-test.js"></script>
+        <script src="js/global.js"></script>
+        <script src="js/pedidos-historico.js"></script>
+
+        
+    </body>
+</html>
