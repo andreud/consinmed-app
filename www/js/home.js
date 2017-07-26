@@ -1,12 +1,5 @@
 function HomeCtrl() {
 
-    // en data-test.js
-    /*var listaMarcasData = [
-        {nombre:'MEJIA', id:'1'},
-        {nombre:'SENCO', id:'2'},
-        {nombre:'INCOLMA', id:'3'}
-    ];*/
-
     database = initDatabase()
 
     /**

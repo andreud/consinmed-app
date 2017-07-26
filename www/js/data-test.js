@@ -2,7 +2,7 @@
      * Tabla Marcas
      */ 
         
-    var listaMarcasDataStatic = [
+    listaMarcasDataStatic = [
         {nombre:'x MEJIA', id:'1'},
         {nombre:'x SENCO', id:'2'},
         {nombre:'x INCOLMA', id:'3'}
@@ -21,6 +21,20 @@
         }
     
     ];*/
+
+    /**
+     * Clientes
+     */
+    clientesDataStatic = [
+        {
+            id : '4',
+            razon_social: 'Cliente Cuatro'
+        },
+        {
+            id : '3',
+            razon_social: 'Cliente Tres'
+        }
+    ]
 
 
 
