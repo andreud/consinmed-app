@@ -57,19 +57,25 @@ function catalogoFamiliaCtrl() {
      * @type       Vue Root
      */
 	var catalogoMarca = new Vue({
+
 	    el: "#catalogo-marca",
+	    
 	    data: dataCatalogoMarca,
+	    
 	    methods: {
+	    
 	    	familiaVisible: function (familia) {		
 	    		familia.visible=!familia.visible;
 	    	},
+
 	    	actualizarPedido: function(familias) {	
 	    		// Por cada familia, devuelve los productos con cant!=''
 	    		var productosSelecMarca = []
 	    		var familiasProductosSelecMarca = []
 	    		_.forEach(familias, function(familia) {
 	    			
-	    			//familiasProductosSelecMarca.push(familia.nombre:[])	    			
+	    			//familiasProductosSelecMarca.push(familia.nombre:[])
+	    			
 	    			productosSelecMarcaV2 = _.filter(familia.productos, function(producto) {
     					return producto.cantidad!='0' && producto.cantidad!=''  
     				})
@@ -119,63 +125,99 @@ function catalogoFamiliaCtrl() {
 
     
     //obten las familias de la marca, los productos de cada familia y actualiza en el Vue
-    database.transaction( catalogoTransactions, errorTransactionGeneral);
-    
-    function catalogoTransactions(tr) {         
-        familiasProductosDB = []
-        //obten las familias de la marca, 
-        tr.executeSql('SELECT * FROM familias WHERE id_marca='+idMarca, [], sqlFamiliasCallback.bind(familiasProductosDB)  )
+    database.transaction(
+        function (tr) {
+           
+            familiasProductosDB = []
+            
+            //obten las familias de la marca, 
+            tr.executeSql('SELECT * FROM familias WHERE id_marca='+idMarca, [], function(tr, rsFamilias){ 
+                //alert(JSON.stringify(rsFamilias))
+                for(var x = 0; x < rsFamilias.rows.length; x++) {
+                    familia = rsFamilias.rows.item(x)
 
-        // Pasa la data estructurada al Vue
-        catalogoMarca.familias = familiasProductosDB
-    }
-    
+                    productosEnFamilia = []
+                    //familiaF = {}
 
-    function sqlFamiliasCallback(tr, rsFamilias){
-        //alert(JSON.stringify(rsFamilias))
-        for(var x = 0; x < rsFamilias.rows.length; x++) {
-            familia = rsFamilias.rows.item(x)
-            familiaF = {
-                id: familia.id,
-                nombre: familia.nombre,
-                descuentoPC: 0,
-                visible:false,
-                productos: []
-            }
+                    familiaF = {
+                        id: familia.id,
+                        nombre: familia.nombre,
+                        descuentoPC: 0,
+                        visible:false,
+                        productos: []
+                    }
+                    //familiasProductosDB.push(familiaF)
+                    
+                    tr.executeSql('SELECT * FROM productos WHERE id_familia='+familia.id, [], function(tr,rsProductos){
+                        for(var i = 0; i < rsProductos.rows.length; i++) {
+                            producto = rsProductos.rows.item(i)
+                            //familiasProductosDB[x].productos.push({
+                            productoF = {
+                                id: producto.id,
+                                nombre: producto.nombre,
+                                codigo: producto.codigo,
+                                caj_x_bulto: 'X',//producto.caj_x_bulto,
+                                unid_x_caja: 'X',//producto.unid_x_caja,
+                                precio_bulto: 'X',//producto.precio_bulto,
+                                cantidad: ''
+                            }
+                            productosEnFamilia.push(productoF)
+                        }
+                        //familiaF.productos = productosEnFamilia
+                        
+                        /*familiaF = {
+                            id: familia.id,
+                            nombre: familia.nombre,
+                            descuentoPC: 0,
+                            visible:false,
+                            productos: productosEnFamilia
+                        }*/
+                    })
 
-            tr.executeSql(
-                'SELECT * FROM productos WHERE id_familia='+familia.id, [], sqlProductosCallback.bind(familiaF)
-            )
 
-            this.push(familiaF)
-        }     
-    }
+                    
+                    
+                    familiasProductosDB.push(familiaF)
 
+                        
+                   
+                }
+            })
+            
+            //obten los productos de cada familia
+            /*_.forEach(familiasProductosDB, function(el, i) {
+                tr.executeSql('SELECT * FROM productos WHERE id_familia='+el.id, [], function(tr,rs){
+                    //productosFamilia = []
+                    for(var i = 0; i < rs.rows.length; i++) {
+                        producto = rs.rows.item(i)
+                        el.productos.push({
+                        //catalogoMarca.familias[i].push({
+                            id: producto.id,
+                            nombre: producto.nombre,
+                            codigo: producto.codigo,
+                            caj_x_bulto: 'X',//producto.caj_x_bulto,
+                            unid_x_caja: 'X',//producto.unid_x_caja,
+                            precio_bulto: 'X',//producto.precio_bulto,
+                            cantidad: ''
+                        })
+                    }
+                })
+            })*/
 
-    function sqlProductosCallback(tr,rsProductos){
-        for(var i = 0; i < rsProductos.rows.length; i++) {
-            producto = rsProductos.rows.item(i)
-            //familiasProductosDB[x].productos.push({
-            productoF = {
-                id: producto.id,
-                nombre: producto.nombre,
-                codigo: producto.codigo,
-                caj_x_bulto: 'X',//producto.caj_x_bulto,
-                unid_x_caja: 'X',//producto.unid_x_caja,
-                precio_bulto: 'X',//producto.precio_bulto,
-                cantidad: ''
-            }
-            this.productos.push(productoF)
+            
+            // Pasa la data estructurada al Vue
+            catalogoMarca.familias = familiasProductosDB
+
+        }, 
+        function(error) {
+            alert('SELECT error: ' + error.message)
         }
-    }
-
-    function errorTransactionGeneral(error) {
-        alert('SELECT error: ' + error.message)
-    }
+    )
+    
 
 
 
-	/*
+	    /*
 	Vue.component('catalogo-familia', {
 		template:'#tempate-catalogo-familia',
 		props:['familia']
@@ -184,6 +226,14 @@ function catalogoFamiliaCtrl() {
 		template : '<div>{{producto.nombre}}</div>',
 		props:['producto']
 	});*/
+
+
+
+	
+
+
+
+
 
 }
 
