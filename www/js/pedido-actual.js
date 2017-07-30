@@ -4,22 +4,26 @@ function pedidoActualCtrl(){
     //var productosSelecMarca = localStorage.getItem("productosSelecMarca")
     var productosSelecMarca = JSON.parse(localStorage.getItem("productosSelecMarca"))
        
-    var marca = _.find(listaMarcasData, {'id': idMarca})
+	/**
+     * PedidoActualVue
+     *
+     * @type       Vue Root
+     */
+    var PedidoActualVue = new Vue({
 
-
-    var pedidoActualDataStorage = {
-        marca: marca.nombre,
-        familias: productosSelecMarca
-    }
-
-
-	var PedidoActualVue = new Vue({
-
-		el : '#pedido-actual',
-
-		//'template' : 
+		el : '#pedido-actual', 
 		
-		data: pedidoActualDataStorage,
+		data: {
+            marca:{},
+            familias: productosSelecMarca,
+            totales:{
+                totalBrutoPedido : 0
+            }
+        },
+
+        mounted: function() { //vs created
+            this.totalizar()
+        },
 
         methods: {
             guardarPedido: function() {
@@ -29,11 +33,40 @@ function pedidoActualCtrl(){
                 //set id para siguiente pagina
                 //localStorage.setItem('idPedidoVer',idPedido);
                 window.location.href= 'pedido-guardado.html'
+            },
+            totalizar: function() {
+                var totalPedido = 0
+                this.familias.forEach(function(familia) {
+                    var totalBrutoFamilia = 0,
+                        descuentoFamiliaMonto = 0
+                    familia.productos.forEach(function(producto){
+                        //alert('Procesando producto' + producto.nombre)
+                        totalBrutoProducto =  parseInt(producto.precio_bulto*producto.cantidad)
+                        totalBrutoFamilia = parseInt(totalBrutoFamilia) + totalBrutoProducto 
+                        producto.total = totalBrutoProducto
+                    })
+                    familia.total = totalBrutoFamilia
+                    totalPedido = totalPedido + totalBrutoFamilia
+                })
+                this.totales.totalBrutoPedido = totalPedido
             }
         }
         
 
 	})
+
+
+    database = initDatabase()
+
+    // obten la marca seleccioanda de la bd ? o pasar el objeto directo desde el home?
+    database.transaction( marcaTransaction, errorTransactionGeneral)
+    function marcaTransaction(tr) {
+        marcaF = {};
+        tr.executeSql('SELECT * FROM marcas WHERE id='+idMarca,[], function(tr, rsMarca) {
+            marcaF = rsMarca.rows.item(0)
+            PedidoActualVue.marca = marcaF
+        })
+    }
 
 
 }
@@ -50,7 +83,7 @@ var app = {
         
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
           
-        pedidoActualCtrl(); 
+        
 
     },
 
@@ -59,15 +92,10 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        //this.receivedEvent('deviceready');
-    
-       
 
-        //console.log( window.sqlitePlugin );
-       
-       /* window.sqlitePlugin.echoTest(function() {
-            console.log('ECHO test OK');
-        })*/
+        //this.receivedEvent('deviceready');
+       pedidoActualCtrl(); 
+
     }
 
 

@@ -15,116 +15,109 @@
     </head>
     <body>
         
-            <div id="Navbar"></div>
+        <div id="Navbar"></div>
 
-            <script id="selectorClientes" type="template" >
-                <div>
+        <!-- VUE catalogoMarca -->   
+        <div id="catalogo-marca">
+
+            <div class="container">                    
+                <selector-clientes v-bind:clientes="clientes" v-on:seleccionado="actualizaCliente"></selector-clientes>
+                <hr>
+                {{clienteSeleccionadoID}}
+            </div>
+
+            <h3 class="h-marca">{{marca.nombre}}</h3>
+            
+            <div v-for="familia in familias" >
+                <h4 class="h-familia" 
+                    v-on:click="familiaVisible(familia)">
+                    {{familia.nombre}} ({{familia.descuentoPC}} )
+                    <i class="fa fa-fw pull-right" 
+                        v-bind:class="familia.visible?'fa-minus-circle':'fa-plus-circle'"></i>
+                </h4>    
+                <div v-show="familia.visible">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Cod</th>
+                                <th>Nombre/Descripcón</th>
+                                <th>Caj x Bulto</th>
+                                <th>Unid x Caja</th>
+                                <th>Precio Bulto</th>
+                                <th width="80px">Agregar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="producto in familia.productos">
+                                <td>{{producto.codigo}}</td>
+                                <td>{{producto.nombre}}</td>
+                                <td>{{producto.cajas_x_bulto}}</td>
+                                <td>{{producto.unid_x_caja}}</td>
+                                <td>{{producto.precio_bulto}}</td>
+                                <td><input type="number" v-model="producto.cantidad" placeholder="0"class="form-control"></td>
+                            </tr>
+                        </div>
+                        </tbody>
+                    </table>
+                    <div class="container">
+                        <selector-descuento v-bind:familia="familia"></selector-descuento>          
+                    </div>
+                </div>
+                <hr>                      
+            </div> 
+
+            <p style="text-align: center;">
+                <button 
+                    v-on:click="actualizarPedido()"
+                    class="btn btn-primary btn-lg"><i class="fa fa-refresh fa-fw"></i> 
+                    Actualizar Pedido
+                </button>
+            </p>
+  
+        </div>
+        <!-- fin VUE catalogoMarca -->
+
+
+        <!-- Vue Template selectorClientes -->
+        <script id="selectorClientes" type="text/x-template" >
+            <div  class="form-group row" >
                 <label for="cliente" class="col-4 col-form-label">Cliente</label>
-                <select v-model="clienteSeleccionado" class="col-8 form-control">
+                <select v-model="clienteSeleccionado" class="col-8 form-control" 
+                    v-on:change="clienteFueSeleccionado">
                    <option v-for="cliente in clientes" v-bind:value="cliente.id">
                     {{cliente.razon_social}}
                    </option>
                 </select>
-                </div>
-            </script>
-
-            <!-- VUE -->   
-            <div id="catalogo-marca">
-
-                <div class="container">
-                    <div  class="form-group row" >
-                        <selector-clientes v-bind:clientes="clientes"></selector-clientes>
-                        <hr>
-                    </div>
-                </div>
-                <h3 class="h-marca">{{marca}}</h3>
-                
-                <!-- usando subcomponetes (ver limitacione de html en guia) -->
-                <!-- <catalogo-familia 
-                    v-for="familia in familias" 
-                    v-bind:familia="familia"></catalogo-familia> -->
-
-                <!-- Sin subcomponentes -->
-                <div v-for="familia in familias" >
-                    <h4 class="h-familia" 
-                        v-on:click="familiaVisible(familia)">
-                        {{familia.nombre}} <i class="fa fa-plus-circle fa-fw pull-right"></i>
-                    </h4>    
-                    
-                    <div v-show="familia.visible">
-                       
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Cod</th>
-                                    <th>Nombre/Descripcón</th>
-                                    <th>Caj x Bulto</th>
-                                    <th>Unid x Caja</th>
-                                    <th>Precio Bulto</th>
-                                    <th width="80px">Agregar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="producto in familia.productos">
-                                    <td>{{producto.codigo}}</td>
-                                    <td>{{producto.nombre}}</td>
-                                    <td>---</td>
-                                    <td>---</td>
-                                    <td>{{producto.precio_bulto}}</td>
-                                    <td><input type="number" v-model="producto.cantidad" placeholder="0"class="form-control"></td>
-                                </tr>
-                            </div>
-                            </tbody>
-                        </table>
-                        
-                        <div class="container">
-                        <div class="form-group row">
-                           <label for="descuento"  class="col-9 col-form-label" >
-                            <p style="text-align:right">Descuento {{familia.nombre}}</p></label>
-                           <select v-model="familia.descuentoPC" class="form-control col-3" >
-                               <option value="0">--</option>
-                               <option value="5">5%</option>
-                               <option value="10">10%</option>
-                               <option value="15">15%</option>
-                               <option value="20">20%</option>
-                               <option value="25">25%</option>
-                               <option value="30">30%</option>
-                           </select>
-                        </div>
-                        </div>
-
-                    </div>
-                    <hr>                      
-                </div> 
-
-
-                <p style="text-align: center;">
-                    <button 
-                        v-on:click="actualizarPedido(familias)"
-                        class="btn btn-primary btn-lg"><i class="fa fa-refresh fa-fw"></i> Actualizar Pedido</button>
-                </p>
-      
+                {{clienteSeleccionado}}
             </div>
-            <!-- fin VUE -->
+        </script>
 
 
-        <!-- <script type="text/x-template" id="tempate-catalogo-familia">
-            <div>
-                <h4>{{familia.nombre}}</h4>
-                <catalogo-producto 
-                    v-for="producto in familia.productos"
-                    v-bind:producto="producto"></catalogo-producto>
+        <!-- Vue Template selectorDescuento -->
+        <script id="selectorDescuento" type="text/x-template" >
+            <div class="form-group row">
+                <label for="descuento"  class="col-9 col-form-label" >
+                    <p style="text-align:right">Descuento {{familia.nombre}}</p>
+                </label>
+                <select v-model="familia.descuentoPC" class="form-control col-3" >
+                   <option value="0">--</option>
+                   <option value="5">5%</option>
+                   <option value="10">10%</option>
+                   <option value="15">15%</option>
+                   <option value="20">20%</option>
+                   <option value="25">25%</option>
+                   <option value="30">30%</option>
+                </select>
             </div>
-        </script> -->
-    
-        
+        </script>
+
+
         <script src="cordova.js"></script>
         <script src="js/libs/lodash.js"></script>
         <script src="js/libs/vue.js"></script>
         <script src="js/data-test.js"></script>
         <script src="js/global.js"></script>
         <script src="js/catalogo.js"></script>
-
         
     </body>
 </html>

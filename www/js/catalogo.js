@@ -3,33 +3,10 @@
  */
 function catalogoFamiliaCtrl() {
     
-    database = initDatabase()
+    var idMarca = localStorage.getItem("marcaCatalogo") //alert(typeof idMarca) //string 
+    var idCliente = localStorage.getItem("IdClienteCatalogo") //alert(typeof idMarca) //string 
+
     
-    // obtener marca seleccionada
-    var idMarca = localStorage.getItem("marcaCatalogo")
-    //alert(typeof idMarca) //string
-    var marca = _.find(listaMarcasDataStatic,  {'id': idMarca}  )
-
-    //alert(JSON.stringify(marca))
-    
-    // obtener arbol de familias/marcas/productos
-    var dataCatalogoMarcaProductosStore = _
-        .find(marcasFamiliasProductosDataStore, {'id_marca': idMarca})
-    
-
-
-
-
-    // arbol data para Vue
-	var dataCatalogoMarca = {
-        marca: marca.nombre,
-        //familias: dataCatalogoMarcaProductosStore.familias,
-        familias: [],
-        //clientes: clientesDataStatic
-        clientes: []
-    }
-
-
     /**
      * Selector de clientes 
      * 
@@ -37,18 +14,26 @@ function catalogoFamiliaCtrl() {
      */
     Vue.component( 'selector-clientes', {
         template: '#selectorClientes',
-        props: ['clientes'] 
+        props: ['clientes'],
+        data: function(){
+            return { clienteSeleccionado: ''}
+        },
+        methods: {
+            clienteFueSeleccionado: function() {
+                this.$emit('seleccionado', this.clienteSeleccionado)
+            }
+        }
     })
 
     /**
-     * Selector de porc descuento 
+     * Selector de porcentaje descuento a familia
      * 
      * @type       Vue Component
      */
-    /*Vue.component( 'selector-descuento', {
+    Vue.component( 'selector-descuento', {
         template: '#selectorDescuento',
-        props: ['descuento'] 
-    })*/
+        props: ['familia'] 
+    })
 
 
     /**
@@ -58,47 +43,63 @@ function catalogoFamiliaCtrl() {
      */
 	var catalogoMarca = new Vue({
 	    el: "#catalogo-marca",
-	    data: dataCatalogoMarca,
+	    data: {
+            clientes: [],
+            clienteSeleccionadoID: '',
+            marca: {},
+            familias: []
+        },
 	    methods: {
 	    	familiaVisible: function (familia) {		
 	    		familia.visible=!familia.visible;
 	    	},
 	    	actualizarPedido: function(familias) {	
-	    		// Por cada familia, devuelve los productos con cant!=''
-	    		var productosSelecMarca = []
-	    		var familiasProductosSelecMarca = []
-	    		_.forEach(familias, function(familia) {
-	    			
-	    			//familiasProductosSelecMarca.push(familia.nombre:[])	    			
-	    			productosSelecMarcaV2 = _.filter(familia.productos, function(producto) {
+
+                if(!this.validaActualizarPedidio()) return
+
+                // Recoge los productos que se agregaron en un arbol familias-productos
+	    		var familiasProductosSelecMarca = []	    		
+                _.forEach(this.familias, function(familia) { //vue foreach?
+	    			productosSeleccionados = _.filter(familia.productos, function(producto) {
     					return producto.cantidad!='0' && producto.cantidad!=''  
     				})
+
+                    /*productosSeleccionados = _.each(productosSeleccionados, function(producto) {
+                        producto.total = 0; 
+                    })*/
 	    			
-	    			if( ! _.isEmpty(productosSelecMarcaV2) ) {
+	    			if( ! _.isEmpty(productosSeleccionados) ) {
 		    			familiasProductosSelecMarca.push({
 		    				nombre: familia.nombre,
 		    				descuentoPC: familia.descuentoPC,
-		    				productos: productosSelecMarcaV2
+		    				productos: productosSeleccionados,
+                            total: 0
 		    			})
 		    		}
-
-	    			/*_.filter(familia.productos, function(producto) {
-	    					return producto.cantidad!='0' && producto.cantidad!=''  
-	    				}).forEach(function(producto) {
-	    					//console.log(producto.nombre)
-	    					productosSelecMarca.push(producto);
-	    					//productosSelecMarca.push(producto);
-	    				})*/
-	    		})
+                })
 
 	    		//console.log(familiasProductosSelecMarca)
-	    		//localStorage.setItem("productosSelecMarca", familiasProductosSelecMarca )
-	    		localStorage.setItem("productosSelecMarca", JSON.stringify(familiasProductosSelecMarca) )
+                localStorage.setItem("productosSelecMarca", JSON.stringify(familiasProductosSelecMarca) )
 	    		window.location.href = 'pedido-actual.html'
-	    	}
+	    	},
+            validaActualizarPedidio: function() {
+                if(this.clienteSeleccionadoID=='') {
+                    alert('Debe seleccionar un cliente para continuar.')
+                    return false;
+                }
+                return true;
+            },
+            actualizaCliente: function (IdCliente) {
+                localStorage.setItem("IdClienteCatalogo", IdCliente)
+                this.clienteSeleccionadoID = IdCliente 
+            }
+        
 	    }
 	})
 
+
+
+    database = initDatabase()
 
     // obtener lista de clientes de la bd
     database.transaction(
@@ -111,13 +112,19 @@ function catalogoFamiliaCtrl() {
                 catalogoMarca.clientes = listaClientesDataDB
             })
         }, 
-        function(error) {
-            alert('SELECT error: ' + error.message)
-        }
+        errorTransactionGeneral
     )
 
-
-    
+    // obten la marca seleccioanda de la bd ? o pasar el objeto directo desde el home?
+    database.transaction( marcaTransaction, errorTransactionGeneral)
+    function marcaTransaction(tr) {
+        marcaF = {};
+        tr.executeSql('SELECT * FROM marcas WHERE id='+idMarca,[], function(tr, rsMarca) {
+            marcaF = rsMarca.rows.item(0)
+            catalogoMarca.marca = marcaF
+        })
+    }
+   
     //obten las familias de la marca, los productos de cada familia y actualiza en el Vue
     database.transaction( catalogoTransactions, errorTransactionGeneral);
     
@@ -130,7 +137,6 @@ function catalogoFamiliaCtrl() {
         catalogoMarca.familias = familiasProductosDB
     }
     
-
     function sqlFamiliasCallback(tr, rsFamilias){
         //alert(JSON.stringify(rsFamilias))
         for(var x = 0; x < rsFamilias.rows.length; x++) {
@@ -151,7 +157,6 @@ function catalogoFamiliaCtrl() {
         }     
     }
 
-
     function sqlProductosCallback(tr,rsProductos){
         for(var i = 0; i < rsProductos.rows.length; i++) {
             producto = rsProductos.rows.item(i)
@@ -160,30 +165,17 @@ function catalogoFamiliaCtrl() {
                 id: producto.id,
                 nombre: producto.nombre,
                 codigo: producto.codigo,
-                caj_x_bulto: 'X',//producto.caj_x_bulto,
-                unid_x_caja: 'X',//producto.unid_x_caja,
-                precio_bulto: 'X',//producto.precio_bulto,
+                cajas_x_bulto: producto.cajas_x_bulto,//producto.caj_x_bulto,
+                unid_x_caja: producto.unid_x_caja,//producto.unid_x_caja,
+                precio_bulto: producto.precio_bulto,//producto.precio_bulto,
                 cantidad: ''
             }
             this.productos.push(productoF)
         }
     }
 
-    function errorTransactionGeneral(error) {
-        alert('SELECT error: ' + error.message)
-    }
 
-
-
-	/*
-	Vue.component('catalogo-familia', {
-		template:'#tempate-catalogo-familia',
-		props:['familia']
-	});
-	Vue.component('catalogo-producto', {
-		template : '<div>{{producto.nombre}}</div>',
-		props:['producto']
-	});*/
+    
 
 }
 
