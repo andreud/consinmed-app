@@ -1,6 +1,6 @@
 function initDatabase() {
   //contenido
-  var database = window.sqlitePlugin.openDatabase({name: 'mydb7.db', location: 'default', createFromLocation: 1});
+  var database = window.sqlitePlugin.openDatabase({name: 'mydb10.db', location: 'default', createFromLocation: 1});
   return database;
   //global scope
   //database = window.sqlitePlugin.openDatabase({name: 'mydb3.db', location: 'default', createFromLocation: 1});

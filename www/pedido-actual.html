@@ -37,7 +37,7 @@
                   </small>    
                 </h4>
                 
-                <table class="table table-striped">
+                <table class="table table-striped table-responsive">
                     <thead>
                         <tr>
                             <th>Cod</th>
@@ -67,83 +67,117 @@
                 <hr>                      
             </div> 
 
-            <table class="table table-bordered">
+            <table class="table table-bordered ">
                 <tr>
-                    <th>Total Bruto: </th>
-                    <td>{{totales.totalBrutoPedido}}</td>
+                    <th>
+                      <p class="text-left">Total Bruto</p>
+                    </th>
+                    <td>
+                      <p class="text-right">{{totales.totalBruto}}</p>
+                    </td>
                 </tr>
                 <tr>
-                    <th>Descuento:</th>
-                    <td></td>
+                    <th>
+                      <p class="text-left">Total Descuentos Parciales</p>
+                    </th>
+                    <td>
+                      <p class="text-right">{{totales.totalDescuentosParciales}}</p>
+                    </td>
                 </tr>
                 <tr>
-                    <th>Base Imponible</th>
-                    <td></td>
+                    <th>
+                      <p class="text-left">Base Imponible</p>
+                    </th>
+                    <td>
+                      <p class="text-right">{{totales.baseImponible}}</p>
+                    </td>
                 </tr>
                 <tr>
-                    <th>IVA</th>
-                    <td></td>
+                    <th>
+                      <p class="text-left">IVA (12%)</p>
+                    </th>
+                    <td>
+                      <p class="text-right">{{totales.iva}}</p>
+                    </td>
                 </tr>
                 <tr>
-                    <th>Total a pagar</th>
-                    <td></td>
+                    <th>
+                      <p class="text-left">Total Operación</p>
+                    </th>
+                    <td>
+                      <p class="text-right">{{totales.totalOperacion}}</p>
+                    </td>
                 </tr>
             </table>
 
             <div class="container">
                 <div  class="form-group row" >
-                   <label for="descuento" class="col-4 col-form-label">Cliente</label>
-                   <select name="descuento" class="col-8 form-control">
+                   <label class="col-4 col-form-label">Cliente</label>
+                   <div class="col-8">
+                    {{ meta.cliente.razon_social }}
+                   </div>            
+                </div>
+            </div>
+
+            <div class="container">
+                <div  class="form-group row" >
+                   <label for="" class="col-4 col-form-label">Nro Orden Cliente</label>
+                   <input v-model="meta.nOrdenCliente" type="text" class="col-8 form-control">
+                </div>
+            </div>
+
+
+
+            <div class="container">
+                <div  class="form-group row" >
+                   <label for="" class="col-4 col-form-label">Condiciones de Pago</label>
+                   <select v-model="meta.condicionesPago" class="col-8 form-control">
                        <option value="--">--</option>
-                       <option value="#">Tambotorca</option>
-                       <option value="#">Litani Import</option>
-                       <option value="#">Hierro San Felix</option>
+                       <option value="Prepagado">Prepagado</option>
+                       <option value="Contado">Contado</option>
+                       <option value="Crédito 5 dias">Crédito 5 dias</option>
+                       <option value="Crédito 7 dias">Crédito 7 dias</option>
+                       <option value="Crédito 15 dias">Crédito 15 dias</option>
+                       <option value="Crédito 20 dias">Crédito 20 dias</option>
                    </select>            
                 </div>
+                
             </div>
 
 
             <div class="container">
                 <div  class="form-group row" >
-                   <label for="descuento" class="col-4 col-form-label">Condiciones de Pago</label>
-                   <select name="descuento" class="col-8 form-control">
+                   <label for="" class="col-4 col-form-label">Despacho</label>
+                   <select v-model="meta.despacho" class="col-8 form-control">
                        <option value="--">--</option>
-                       <option value="#">Prepagado</option>
-                       <option value="#">Contado</option>
-                       <option value="#">Crédito 5 dias</option>
-                       <option value="#">Crédito 7 dias</option>
-                       <option value="#">Crédito 15 dias</option>
-                       <option value="#">Crédito 20 dias</option>
+                       <option value="Consinmed">Consinmed</option>
+                       <option value="Cliente">Cliente</option>
+                       <option value="Vendedor">Vendedor</option>
+                       <option value="Otro Transporte">Otro Transporte</option>
                    </select>            
                 </div>
             </div>
 
-
-            <div class="container">
+            <div class="container" v-if="meta.despacho=='Otro Transporte'">
                 <div  class="form-group row" >
-                   <label for="descuento" class="col-4 col-form-label">Despacho</label>
-                   <select name="descuento" class="col-8 form-control">
-                       <option value="--">--</option>
-                       <option value="#">Consinmed</option>
-                       <option value="#">Cliente</option>
-                       <option value="#">Vendedor</option>
-                       <option value="#">Otro Transporte</option>
-                   </select>            
+                   <label for="" class="col-4 col-form-label">Transporte</label>
+                   <input v-model="meta.despachoOtroTransporte" type="text" class="col-8 form-control">
                 </div>
             </div>
+
 
             <div class="container">
                 <div  class="form-group" >
-                   <label for="descuento" class="">Observaciones</label><br>
-                   <textarea name="" id="" cols="30" rows="10"></textarea>         
+                   <label for="observaciones" class="">Observaciones</label><br>
+                   <textarea v-model="meta.observaciones" cols="30" rows="10"></textarea>         
                 </div>
             </div>
 
 
             <p style="text-align: center;">
-                <button 
+                <!-- <button 
                     v-on:click="volver()"
-                    class="btn btn-primary btn-lg"><i class="fa fa-arrow-left fa-fw"></i> Volver </button>
+                    class="btn btn-primary btn-lg"><i class="fa fa-arrow-left fa-fw"></i> Volver </button> -->
                 <button 
                     v-on:click="guardarPedido()"
                     class="btn btn-primary btn-lg"><i class="fa fa-save fa-fw"></i> Guardar Pedido</button>

@@ -1,6 +1,7 @@
 function pedidoActualCtrl(){
 
     var idMarca = localStorage.getItem("marcaCatalogo")
+    var idCliente = localStorage.getItem("IdClienteCatalogo")
     //var productosSelecMarca = localStorage.getItem("productosSelecMarca")
     var productosSelecMarca = JSON.parse(localStorage.getItem("productosSelecMarca"))
        
@@ -17,7 +18,19 @@ function pedidoActualCtrl(){
             marca:{},
             familias: productosSelecMarca,
             totales:{
-                totalBrutoPedido : 0
+                totalBruto : 0,
+                totalDescuentosParciales: 0,
+                baseImponible:0,
+                iva:0,
+                totalOperacion:0
+            },
+            meta:{
+                cliente: {},
+                nOrdenCliente: '',
+                condicionesPago: '',
+                despacho:'',
+                despachoOtroTransporte: '',
+                observaciones:''
             }
         },
 
@@ -26,29 +39,37 @@ function pedidoActualCtrl(){
         },
 
         methods: {
-            guardarPedido: function() {
-
-                //guarda el pedido, y obten su id
-                //
-                //set id para siguiente pagina
-                //localStorage.setItem('idPedidoVer',idPedido);
-                window.location.href= 'pedido-guardado.html'
-            },
+            guardarPedido: guardarPedidoCallback,
             totalizar: function() {
-                var totalPedido = 0
+                var totalBruto = 0,
+                    descuentosParcialesMonto = 0
+
+                // Recorre Familias - Productos, acumula totales y dscuentos por familia y finales
                 this.familias.forEach(function(familia) {
                     var totalBrutoFamilia = 0,
                         descuentoFamiliaMonto = 0
+
                     familia.productos.forEach(function(producto){
-                        //alert('Procesando producto' + producto.nombre)
                         totalBrutoProducto =  parseInt(producto.precio_bulto*producto.cantidad)
-                        totalBrutoFamilia = parseInt(totalBrutoFamilia) + totalBrutoProducto 
                         producto.total = totalBrutoProducto
+                        totalBrutoFamilia = parseInt(totalBrutoFamilia) + totalBrutoProducto 
                     })
                     familia.total = totalBrutoFamilia
-                    totalPedido = totalPedido + totalBrutoFamilia
+                    totalBruto = totalBruto + totalBrutoFamilia
+
+                    // Aplica descuento a la famila 
+                    if(familia.descuentoPC!=0) {
+                        descuentoFamiliaMonto = totalBrutoFamilia * (parseInt(familia.descuentoPC)/100)
+                        descuentosParcialesMonto = descuentosParcialesMonto + descuentoFamiliaMonto 
+                    }
+
                 })
-                this.totales.totalBrutoPedido = totalPedido
+
+                this.totales.totalBruto = totalBruto
+                this.totales.totalDescuentosParciales = descuentosParcialesMonto
+                this.totales.baseImponible = totalBruto - descuentosParcialesMonto
+                this.totales.iva = this.totales.baseImponible * 0.12
+                this.totales.totalOperacion = this.totales.baseImponible + this.totales.iva 
             }
         }
         
@@ -58,7 +79,7 @@ function pedidoActualCtrl(){
 
     database = initDatabase()
 
-    // obten la marca seleccioanda de la bd ? o pasar el objeto directo desde el home?
+    // obten la marca del pedido
     database.transaction( marcaTransaction, errorTransactionGeneral)
     function marcaTransaction(tr) {
         marcaF = {};
@@ -67,6 +88,48 @@ function pedidoActualCtrl(){
             PedidoActualVue.marca = marcaF
         })
     }
+
+    // obten el cliente del pedido
+    database.transaction( clienteTransaction, errorTransactionGeneral)
+    function clienteTransaction(tr) {
+        clienteF = {};
+        tr.executeSql('SELECT * FROM clientes WHERE id='+idCliente,[], function(tr, rsCliente) {
+            clienteF = rsCliente.rows.item(0)
+            PedidoActualVue.meta.cliente = clienteF
+        })
+    }
+
+
+    function guardarPedidoCallback() {
+        database.transaction( 
+            insertPedidoTransactions.bind(this), 
+            function (error) {
+                alert('INSERT error: ' + error.message)
+            }
+        )
+        function insertPedidoTransactions(tr) {
+            //marcaF = {};
+            tr.executeSql('INSERT INTO pedidos VALUES (?,?,?,?,?,?,?,?,?)',[
+                    null, 
+                    1, // TO-DO usuario logeado o defecto
+                    PedidoActualVue.meta.cliente.id,//this.meta.cliente.id,
+                    'no_enviado',
+                    PedidoActualVue.meta.nOrdenCliente,
+                    PedidoActualVue.meta.condicionesPago,
+                    PedidoActualVue.meta.despacho,
+                    PedidoActualVue.meta.despachoOtroTransporte,
+                    PedidoActualVue.meta.observaciones
+                ],
+                function(tr,rsPedido) {
+                    idNuevoPedido = rsPedido.insertId
+                    localStorage.setItem('idPedidoVer', idNuevoPedido )
+                    window.location.href = "pedido-guardado.html"
+                }
+            )
+
+        }
+    }
+
 
 
 }

@@ -24,15 +24,15 @@
             <div class="list-group">
                 <div class="list-group-item">
                     <small>Fecha</small> 
-                    &nbsp; {{pedido.created_at}}
+                    &nbsp; pedido.created_at
                 </div>
                 <div class="list-group-item">
                     <small>Cliente</small> 
-                    &nbsp; {{pedido.cliente.razon_social}}
+                    &nbsp; {{cliente.razon_social}}
                 </div>
                 <div class="list-group-item">
-                    <small>Total Bs</small> 
-                    &nbsp; {{pedido.total}}
+                    <small>Nro Orden Cliente</small> 
+                    &nbsp; {{pedido.n_orden_cliente}}
                 </div>
                 <div class="list-group-item">
                     <small>Status</small> 
@@ -47,22 +47,70 @@
                     <small>Despacho</small> 
                     &nbsp; {{pedido.despacho}}
                 </div>
+                <div v-if="pedido.despacho=='Otro Transporte'" class="list-group-item">
+                    <small>Transporte</small> 
+                    &nbsp; {{pedido.otro_transporte}}
+                </div>
                 <div class="list-group-item">
                     <small>Observaciones</small> 
                     &nbsp; {{pedido.observaciones}}
                 </div>
             </div>
 
-            <h4>Productos</h4>
+            <br>
+
+            <h5>Productos</h5>
     
+            <br>
+            
+            <table class="table table-bordered ">
+                <tr>
+                    <th>
+                      <p class="text-left">Total Bruto</p>
+                    </th>
+                    <td>
+                      <p class="text-right">totales.totalBruto</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                      <p class="text-left">Total Descuentos Parciales</p>
+                    </th>
+                    <td>
+                      <p class="text-right">totales.totalDescuentosParciales</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                      <p class="text-left">Base Imponible</p>
+                    </th>
+                    <td>
+                      <p class="text-right">totales.baseImponible</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                      <p class="text-left">IVA (12%)</p>
+                    </th>
+                    <td>
+                      <p class="text-right">totales.iva</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                      <p class="text-left">Total Operación</p>
+                    </th>
+                    <td>
+                      <p class="text-right">totales.totalOperacion</p>
+                    </td>
+                </tr>
+            </table>
 
-
-
-            <div v-if="pedido.status=='no_enviado'" style="text-align: center;">
+            <p v-if="pedido.status=='no_enviado'" style="text-align: center;">
                 <button 
                     v-on:click="enviarPedido()"
                     class="btn btn-primary btn-lg"><i class="fa fa-send fa-fw"></i> Enviar Pedido</button>
-            </div>
+            </p>
   
         </div>
         <!-- fin VUEJS -->

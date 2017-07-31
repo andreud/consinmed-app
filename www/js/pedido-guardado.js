@@ -1,30 +1,43 @@
 function pedidoGuardadoCtrl(){
 
-
-    var idPedido = localStorage.getItem("idPedidoVer")
-    var pedido = _.find(dataPedidos, {id:idPedido})
-   /* var idMarca = localStorage.getItem("marcaCatalogo")
-    //var productosSelecMarca = localStorage.getItem("productosSelecMarca")
-    var productosSelecMarca = JSON.parse(localStorage.getItem("productosSelecMarca"))
-       
-    var 
-    var marca = _.find(listaMarcasData, {'id': idMarca})
+    idPedido = localStorage.getItem('idPedidoVer')
+    dataPedidoGuardadoVue = {
+        pedido:{},
+        cliente:{}
+    }
 
 
-    var pedidoActualDataStorage = {
-        marca: marca.nombre,
-        familias: productosSelecMarca
-    }*/
+
+    database = initDatabase()
+    database.transaction( pedidoTransaction, errorTransactionGeneral )
+
+    function pedidoTransaction(tr) {
+        tr.executeSql('SELECT * FROM pedidos WHERE id='+idPedido,[], pedidoSqlCallback)
+    }
+
+    function pedidoSqlCallback(tr,rsPedido){
+        pedidoF = rsPedido.rows.item(0)
+        tr.executeSql('SELECT * FROM clientes WHERE id='+pedidoF.id_clientes,[], function(tr, rsCliente) {
+            cliente = rsCliente.rows.item(0)
+            dataPedidoGuardadoVue.cliente = cliente
+        })
+        dataPedidoGuardadoVue.pedido = pedidoF
+    }
 
 
-	new Vue({
+    /**
+     * pedidoGuardadoVue
+     */
+	pedidoGuardadoVue = new Vue({
 
 		el : '#pedidoGuardadoVue',
-
-		//'template' : 
 		
-		data: {
-            pedido: pedido
+		data: dataPedidoGuardadoVue,
+
+        methods: {
+            enviarPedido: function() {
+                // body...
+            }
         }
 
 	})
@@ -44,8 +57,6 @@ var app = {
         
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
           
-        pedidoGuardadoCtrl(); 
-
     },
 
     // deviceready Event Handler
@@ -53,31 +64,10 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        //this.receivedEvent('deviceready');
+        
+        pedidoGuardadoCtrl();
     
-       
-
-        //console.log( window.sqlitePlugin );
-       
-       /* window.sqlitePlugin.echoTest(function() {
-            console.log('ECHO test OK');
-        })*/
-    },
-
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
     }
-
-
-
 
 };
 

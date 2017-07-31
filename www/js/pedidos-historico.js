@@ -7,12 +7,28 @@ function historicoPedidosCtrl() {
     
     // arbol data para Vue
 	var dataHistoricoPedidos = {
-        pedidos: dataPedidos
+        pedidos: [] //dataPedidos
     }
 
 
+    database = initDatabase()
+    database.transaction(pedidosTransaction,errorTransactionGeneral)
+    function pedidosTransaction(tr) {
+        tr.executeSql('SELECT * FROM pedidos',[], function(tr,rsPedidos) {
+            pedidosF = []
+            for(var i=0 ; i < rsPedidos.rows.length; i++ ){
+                //this.pedidos.push(rsPedidos.rows.tem(i)
+                pedidosF.push(rsPedidos.rows.item(i))
+            }
+            //alert(JSON.stringify(pedidosF))
+            dataHistoricoPedidos.pedidos = pedidosF
+        })
+    }
+    
+
+
     /**
-     * Catalogo Marca
+     * Historico de Pedidos Vue
      *
      * @type       Vue Root
      */
@@ -22,7 +38,12 @@ function historicoPedidosCtrl() {
 	    
 	    data: dataHistoricoPedidos,
 
+        mounted: function(){
+            //this.getPedidos()
+        },
+
 	    methods: {
+
 	    	irAPedido: function(idPedido) {
 	    		localStorage.setItem('idPedidoVer',idPedido);
 	    		window.location.href = "pedido-guardado.html";
@@ -56,7 +77,7 @@ var app = {
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
           
-         historicoPedidosCtrl(); 
+         
 
     },
 
@@ -65,15 +86,9 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        //this.receivedEvent('deviceready');
-    
-       
-
-        //console.log( window.sqlitePlugin );
-       
-       /* window.sqlitePlugin.echoTest(function() {
-            console.log('ECHO test OK');
-        })*/
+            
+       historicoPedidosCtrl(); 
+       //this.receivedEvent('deviceready');
     },
 
     // Update DOM on a Received Event

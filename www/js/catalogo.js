@@ -71,7 +71,7 @@ function catalogoFamiliaCtrl() {
 	    			if( ! _.isEmpty(productosSeleccionados) ) {
 		    			familiasProductosSelecMarca.push({
 		    				nombre: familia.nombre,
-		    				descuentoPC: familia.descuentoPC,
+		    				descuentoPC: parseInt(familia.descuentoPC),
 		    				productos: productosSeleccionados,
                             total: 0
 		    			})

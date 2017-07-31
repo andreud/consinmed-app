@@ -23,7 +23,6 @@
             <div class="container">                    
                 <selector-clientes v-bind:clientes="clientes" v-on:seleccionado="actualizaCliente"></selector-clientes>
                 <hr>
-                {{clienteSeleccionadoID}}
             </div>
 
             <h3 class="h-marca">{{marca.nombre}}</h3>
@@ -36,7 +35,7 @@
                         v-bind:class="familia.visible?'fa-minus-circle':'fa-plus-circle'"></i>
                 </h4>    
                 <div v-show="familia.visible">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-responsive">
                         <thead>
                             <tr>
                                 <th>Cod</th>
@@ -88,7 +87,6 @@
                     {{cliente.razon_social}}
                    </option>
                 </select>
-                {{clienteSeleccionado}}
             </div>
         </script>
 

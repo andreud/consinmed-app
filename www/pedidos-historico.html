@@ -34,23 +34,12 @@
                 <tbody>
                     <tr v-for="pedido in pedidos">
                         <td>{{pedido.id}}</td>
-                        <td>{{pedido.created_at}}</td>
-                        <td>{{pedido.cliente.razon_social}}</td>
-                        <td>{{pedido.total}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td>{{pedido.status}}</td>
                         <td><button v-on:click="irAPedido(pedido.id)" class="btn btn-sm">Ver</button></td>
                     </tr>
-                    <!-- <tr>
-                        <th colspan="2">Cond Pago / Despacho</th>
-                        <td colspan="3"></td>
-                    </tr>
-                    <tr>
-                        <th colspan="2">Notas</th>
-                        <td colspan="3"></td>
-                    </tr>
-                    <th>
-                        
-                    </th> -->
                 </tbody>
             </table>
             
