@@ -23,8 +23,8 @@
             <h3 class="h-marca">Pedido ID: {{pedido.id}}</h3>
             <div class="list-group">
                 <div class="list-group-item">
-                    <small>Fecha</small> 
-                    &nbsp; pedido.created_at
+                    <small>Fecha Generado</small> 
+                    &nbsp; {{pedido.fecha_generado}}
                 </div>
                 <div class="list-group-item">
                     <small>Cliente</small> 
@@ -35,8 +35,10 @@
                     &nbsp; {{pedido.n_orden_cliente}}
                 </div>
                 <div class="list-group-item">
-                    <small>Status</small> 
-                    &nbsp; {{pedido.status}}
+                    <small>Status</small>&nbsp;
+                    <span class="badge" v-bind:class="pedido.status=='enviado'?'badge-success':'badge-danger' ">
+                        {{pedido.status}}
+                    </span>
                 </div>
 
                 <div class="list-group-item">
@@ -60,6 +62,12 @@
             <br>
 
             <h5>Productos</h5>
+
+            <ul>
+                <li v-for="familiaProductos in familiasProductos">
+                    {{familia.nombre}}
+                </li>
+            </ul>
     
             <br>
             
@@ -69,7 +77,7 @@
                       <p class="text-left">Total Bruto</p>
                     </th>
                     <td>
-                      <p class="text-right">totales.totalBruto</p>
+                      <p class="text-right">{{pedido.total_bruto}}</p>
                     </td>
                 </tr>
                 <tr>
@@ -85,7 +93,7 @@
                       <p class="text-left">Base Imponible</p>
                     </th>
                     <td>
-                      <p class="text-right">totales.baseImponible</p>
+                      <p class="text-right">{{pedido.base_imponible}}</p>
                     </td>
                 </tr>
                 <tr>
@@ -93,7 +101,7 @@
                       <p class="text-left">IVA (12%)</p>
                     </th>
                     <td>
-                      <p class="text-right">totales.iva</p>
+                      <p class="text-right">{{pedido.iva}}</p>
                     </td>
                 </tr>
                 <tr>
@@ -101,7 +109,7 @@
                       <p class="text-left">Total Operación</p>
                     </th>
                     <td>
-                      <p class="text-right">totales.totalOperacion</p>
+                      <p class="text-right">{{ parseFloat(pedido.base_imponible) + parseFloat(pedido.iva) }}</p>
                     </td>
                 </tr>
             </table>

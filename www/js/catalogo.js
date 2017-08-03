@@ -70,7 +70,8 @@ function catalogoFamiliaCtrl() {
 	    			
 	    			if( ! _.isEmpty(productosSeleccionados) ) {
 		    			familiasProductosSelecMarca.push({
-		    				nombre: familia.nombre,
+		    				id: familia.id,
+                            nombre: familia.nombre,
 		    				descuentoPC: parseInt(familia.descuentoPC),
 		    				productos: productosSeleccionados,
                             total: 0
@@ -131,7 +132,7 @@ function catalogoFamiliaCtrl() {
     function catalogoTransactions(tr) {         
         familiasProductosDB = []
         //obten las familias de la marca, 
-        tr.executeSql('SELECT * FROM familias WHERE id_marca='+idMarca, [], sqlFamiliasCallback.bind(familiasProductosDB)  )
+        tr.executeSql('SELECT * FROM familias WHERE id_marcas='+idMarca, [], sqlFamiliasCallback.bind(familiasProductosDB)  )
 
         // Pasa la data estructurada al Vue
         catalogoMarca.familias = familiasProductosDB
@@ -150,7 +151,7 @@ function catalogoFamiliaCtrl() {
             }
 
             tr.executeSql(
-                'SELECT * FROM productos WHERE id_familia='+familia.id, [], sqlProductosCallback.bind(familiaF)
+                'SELECT * FROM productos WHERE id_familias='+familia.id, [], sqlProductosCallback.bind(familiaF)
             )
 
             this.push(familiaF)

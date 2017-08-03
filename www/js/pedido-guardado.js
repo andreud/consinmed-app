@@ -2,8 +2,9 @@ function pedidoGuardadoCtrl(){
 
     idPedido = localStorage.getItem('idPedidoVer')
     dataPedidoGuardadoVue = {
-        pedido:{},
-        cliente:{}
+        pedido: {},
+        cliente: {},
+        familiasProductos: []
     }
 
 
@@ -13,15 +14,29 @@ function pedidoGuardadoCtrl(){
 
     function pedidoTransaction(tr) {
         tr.executeSql('SELECT * FROM pedidos WHERE id='+idPedido,[], pedidoSqlCallback)
+        //tr.executeSql('SELECT * FROM pedidos_familias WHERE id_pedidos='+idPedido, familiasSqlCallback)
+        //tr.executeSql('SELECT * FROM familias_pedidos_productos WHERE id_pedidos_familias='+idPedido, productosSqlCallback)
     }
 
     function pedidoSqlCallback(tr,rsPedido){
+        
         pedidoF = rsPedido.rows.item(0)
         tr.executeSql('SELECT * FROM clientes WHERE id='+pedidoF.id_clientes,[], function(tr, rsCliente) {
             cliente = rsCliente.rows.item(0)
             dataPedidoGuardadoVue.cliente = cliente
         })
         dataPedidoGuardadoVue.pedido = pedidoF
+    
+
+    }
+
+    //
+    function familiasSqlCallback(tr, rsFamiliasPedido) {
+        for(var x = 0; x < rsFamiliasPedido.rows.length; x++) {
+            //listaClientesDataDB.push(rs.rows.item(x))
+            //dataPedidoGuardadoVue.familiasProductos.push(rsFamiliasPedido.rows.item(x))
+            
+        }
     }
 
 

@@ -34,11 +34,15 @@
                 <tbody>
                     <tr v-for="pedido in pedidos">
                         <td>{{pedido.id}}</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{{pedido.status}}</td>
-                        <td><button v-on:click="irAPedido(pedido.id)" class="btn btn-sm">Ver</button></td>
+                        <td>{{pedido.fecha_generado}}</td>
+                        <td>{{pedido.id_clientes}}</td>
+                        <td>{{ parseFloat(pedido.base_imponible) + parseFloat(pedido.iva) }}</td>
+                        <td>
+                            <span class="badge" v-bind:class="pedido.status=='enviado'?'badge-success':'badge-danger' ">
+                                {{pedido.status}}
+                            </span>
+                        </td>
+                        <td><button v-on:click="irAPedido(pedido.id)" class="btn btn-sm btn-primary">Ver</button></td>
                     </tr>
                 </tbody>
             </table>

@@ -30,7 +30,7 @@
             <div v-for="familia in familias" >
                 <h4 class="h-familia" 
                     v-on:click="familiaVisible(familia)">
-                    {{familia.nombre}} ({{familia.descuentoPC}} )
+                    {{familia.nombre}}
                     <i class="fa fa-fw pull-right" 
                         v-bind:class="familia.visible?'fa-minus-circle':'fa-plus-circle'"></i>
                 </h4>    

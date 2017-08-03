@@ -34,7 +34,7 @@ function pedidoActualCtrl(){
             }
         },
 
-        mounted: function() { //vs created
+        mounted: function() {
             this.totalizar()
         },
 
@@ -99,17 +99,24 @@ function pedidoActualCtrl(){
         })
     }
 
-
+    // Click en guardar pedido
     function guardarPedidoCallback() {
         database.transaction( 
-            insertPedidoTransactions.bind(this), 
+            insertPedidoTransactions, 
             function (error) {
                 alert('INSERT error: ' + error.message)
             }
         )
+
         function insertPedidoTransactions(tr) {
             //marcaF = {};
-            tr.executeSql('INSERT INTO pedidos VALUES (?,?,?,?,?,?,?,?,?)',[
+            var hoy = new Date()
+            var mes = parseInt(hoy.getMonth())+1
+            var fechaGenerado = hoy.getDate() + '/' + mes + '/' + hoy.getFullYear()
+            var idNuevoPedido = '99'
+            tr.executeSql(
+                'INSERT INTO pedidos VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
+                [
                     null, 
                     1, // TO-DO usuario logeado o defecto
                     PedidoActualVue.meta.cliente.id,//this.meta.cliente.id,
@@ -118,16 +125,40 @@ function pedidoActualCtrl(){
                     PedidoActualVue.meta.condicionesPago,
                     PedidoActualVue.meta.despacho,
                     PedidoActualVue.meta.despachoOtroTransporte,
-                    PedidoActualVue.meta.observaciones
+                    PedidoActualVue.meta.observaciones,
+                    PedidoActualVue.totales.totalBruto,
+                    PedidoActualVue.totales.baseImponible,
+                    PedidoActualVue.totales.iva,
+                    fechaGenerado
                 ],
-                function(tr,rsPedido) {
-                    idNuevoPedido = rsPedido.insertId
-                    localStorage.setItem('idPedidoVer', idNuevoPedido )
-                    window.location.href = "pedido-guardado.html"
-                }
+                insertProductosPedido
             )
 
+
+            function insertProductosPedido(tr,rsPedido) {
+                    idNuevoPedido = rsPedido.insertId
+
+                    PedidoActualVue.familias.forEach(function(familiaProductos){        
+                        /*tr.executeSql(
+                            'INSERT INTO pedidos_familias VALUES (?,?,?,?)', [
+                                null,
+                                idNuevoPedido,
+                                familiaProductos.id,
+                                familiaProductos.descuentoPC
+                            ]
+                        )*/
+                        console.log(familiaProductos)
+                    })
+                    localStorage.setItem('idPedidoVer', idNuevoPedido )
+                    window.location.href = "pedido-guardado.html"
+            }
+            
+            
         }
+
+
+
+
     }
 
 
