@@ -37,9 +37,9 @@ function HomeCtrl() {
 
     // obtener marcas de db:
     listaMarcasDataDB = []
-    database.transaction(
-        function(transaction) {
-            transaction.executeSql( "SELECT * FROM marcas", [], function(transaction, rs) {
+    //database.transaction(
+    //    function(transaction) {
+            database.executeSql( "SELECT * FROM marcas", [], function(/*transaction,*/ rs) {
                 //alert('Primer registro marcas: ' + JSON.stringify(rs.rows.item(0)) )
                 for(var x = 0; x < rs.rows.length; x++) {
                     listaMarcasDataDB.push(rs.rows.item(x))
@@ -47,11 +47,11 @@ function HomeCtrl() {
                 //alert( JSON.stringify(listaMarcasDataDB))
                 listaMarcasVue.marcasDB = listaMarcasDataDB
             });
-        }, 
-        function(error) {
+        //}, 
+        /*function(error) {
             alert('SELECT error: ' + error.message)
-        }
-    )
+        }*/
+    //)
 
 
 

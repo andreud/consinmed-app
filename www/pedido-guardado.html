@@ -62,10 +62,12 @@
             <br>
 
             <h5>Productos</h5>
-
+            {{familiasProductos}}
             <ul>
+
                 <li v-for="familiaProductos in familiasProductos">
-                    {{familia.nombre}}
+                    Familia: {{familiaProductos.id}} {{familiaProductos.nombre}} <br>
+                    Descuento: {{familiaProductos.descuentoPC}}
                 </li>
             </ul>
     
