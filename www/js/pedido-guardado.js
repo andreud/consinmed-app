@@ -38,24 +38,37 @@ function pedidoGuardadoCtrl(){
             }
 
             //obtener el registro familia asociado
-            database.executeSql("SELECT * FROM familias WHERE id="+familiaPedido.id_familias, [], function(rsFamilia) {
-                familia = rsFamilia.rows.item(0)
-                familiaF.nombre = familia.nombre
-                //listaFamiliasDataDB.push(familiaF)
-            })
+            database.executeSql(
+                "SELECT * FROM familias WHERE id="+familiaPedido.id_familias, [], familiaRegistroCallback.bind(familiaF)
+            )
+            
+            //obtener los productos pedidos asociados e cada familia
+            /*database.executeSql(
+                'SELECT * FROM pedidos_familias_productos WHERE id_pedidos_familias='+familiaPedido.id, [], familiasProductosSqlCallback.bind(familiaF) 
+            )*/
             listaFamiliasDataDB.push(familiaF)
 
-            //obtener los productos pedidos asociados e cada familia
-            //database.executeSql('SELECT * FROM pedidos_familias_productos WHERE id_pedidos_familias='+familiaPedido.id, [], familiasProductosSqlCallback )
         }
         console.log('listaFamiliasDataDB')
         console.log(listaFamiliasDataDB)// porque devuelve un objeto con funciones?
         dataPedidoGuardadoVue.familiasProductos = listaFamiliasDataDB
     }
 
-    /*function familiasProductosSqlCallback(rsFamiliasProd) {
-        // body...
-    }*/
+    function familiaRegistroCallback(rsFamilia){
+        //console.log('registro familia')
+        familia = rsFamilia.rows.item(0)
+        this.nombre = familia.nombre
+        //listaFamiliasDataDB.push(familiaF)
+    }
+
+    function familiasProductosSqlCallback(rsFamiliaProductos) {
+        for(var x = 0; x < rsFamiliaProductos.rows.length; x++) {
+            producto = rsFamiliaProductos.rows.item(x)
+            this.productos.push({
+                
+            })
+        }
+    }
 
 
     /**

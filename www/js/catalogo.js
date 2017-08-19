@@ -102,39 +102,28 @@ function catalogoFamiliaCtrl() {
 
     database = initDatabase()
 
-    // obtener lista de clientes de la bd
-    //database.transaction( function (tr) {
-            listaClientesDataDB = []
-            database.executeSql('SELECT * FROM clientes', [], function(/*tr,*/ rs){
-                for(var x = 0; x < rs.rows.length; x++) {
-                    listaClientesDataDB.push(rs.rows.item(x))
-                }
-                catalogoMarca.clientes = listaClientesDataDB
-            })
-        //}, 
-        //errorTransactionGeneral
-    //)
+    // Obtener todos los clientes 
+    listaClientesDataDB = []
+    database.executeSql('SELECT * FROM clientes', [], function(/*tr,*/ rs){
+        for(var x = 0; x < rs.rows.length; x++) {
+            listaClientesDataDB.push(rs.rows.item(x))
+        }
+        catalogoMarca.clientes = listaClientesDataDB
+    })
 
-    // obten la marca seleccioanda de la bd ? o pasar el objeto directo desde el home?
-    //database.transaction( marcaTransaction, errorTransactionGeneral)
-    //function marcaTransaction(tr) {
-        marcaF = {};
-        database.executeSql('SELECT * FROM marcas WHERE id='+idMarca,[], function(/*tr,*/ rsMarca) {
-            marcaF = rsMarca.rows.item(0)
-            catalogoMarca.marca = marcaF
-        })
-    //}
-   
-    //obten las familias de la marca, los productos de cada familia y actualiza en el Vue
-    //database.transaction( catalogoTransactions, errorTransactionGeneral);
-    //function catalogoTransactions(tr) {         
-        familiasProductosDB = []
-        //obten las familias de la marca, 
-        database.executeSql('SELECT * FROM familias WHERE id_marcas='+idMarca+' ORDER BY orden', [], sqlFamiliasCallback.bind(familiasProductosDB)  )
+    // Obtener el registro de la marca seleccionada
+    marcaF = {};
+    database.executeSql('SELECT * FROM marcas WHERE id='+idMarca,[], function(/*tr,*/ rsMarca) {
+        marcaF = rsMarca.rows.item(0)
+        catalogoMarca.marca = marcaF
+    })
+ 
+    //obten las familias y sus productos de la marca seleccionada, 
+    familiasProductosDB = []
+    database.executeSql('SELECT * FROM familias WHERE id_marcas='+idMarca+' ORDER BY orden', [], sqlFamiliasCallback.bind(familiasProductosDB)  )
 
-        // Pasa la data estructurada al Vue
-        catalogoMarca.familias = familiasProductosDB
-    //}
+    // Pasa la data estructurada al Vue
+    catalogoMarca.familias = familiasProductosDB
     
     function sqlFamiliasCallback(/*tr,*/ rsFamilias){
         //alert(JSON.stringify(rsFamilias))

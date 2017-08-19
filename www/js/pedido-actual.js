@@ -129,91 +129,39 @@ function pedidoActualCtrl(){
             FamiliasPedido = []
 
             PedidoActualVue.familias.forEach(function(familiaProductos){        
-                console.log(idNuevoPedido)   
-                console.log(familiaProductos)
                 FamiliaPedidoF = [
                     null,
                     idNuevoPedido,
                     familiaProductos.id,
                     familiaProductos.descuentoPC
                 ]
+                console.log('FamiliaPedidoF')
                 console.log(FamiliaPedidoF)
                 FamiliasPedido.push(FamiliaPedidoF)
                 database.executeSql('INSERT INTO pedidos_familias VALUES (?,?,?,?)', FamiliaPedidoF )
                 
+                console.log('familiaProductos.productos')
+                console.log(familiaProductos.productos)
+
+
+                /*
+                familiaProductos.productos.forEach(function(producto) {
+                    databse.executeSql('INSERT INTO pedidos_familias_productos VALUES (?,?,?,?,?)',[
+                        null,
+                        //familiaProductos.id,
+
+                    ], function(){
+
+                    })
+                })*/
+
             })
 
             localStorage.setItem('idPedidoVer', idNuevoPedido )
             //window.location.href = "pedido-guardado.html"
         }
 
-
-        /***/
-        /*
-        database.transaction( 
-            insertPedidoTransactions, 
-            function (error) {
-                alert('INSERT error: ' + error.message)
-            }
-        )
-
-        function insertPedidoTransactions(tr) {
-            //marcaF = {};
-            var hoy = new Date()
-            var mes = parseInt(hoy.getMonth())+1
-            var fechaGenerado = hoy.getDate() + '/' + mes + '/' + hoy.getFullYear()
-            var idNuevoPedido = '99'
-            tr.executeSql(
-                'INSERT INTO pedidos VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
-                [
-                    null, 
-                    1, // TO-DO usuario logeado o defecto
-                    PedidoActualVue.meta.cliente.id,//this.meta.cliente.id,
-                    'no_enviado',
-                    PedidoActualVue.meta.nOrdenCliente,
-                    PedidoActualVue.meta.condicionesPago,
-                    PedidoActualVue.meta.despacho,
-                    PedidoActualVue.meta.despachoOtroTransporte,
-                    PedidoActualVue.meta.observaciones,
-                    PedidoActualVue.totales.totalBruto,
-                    PedidoActualVue.totales.baseImponible,
-                    PedidoActualVue.totales.iva,
-                    fechaGenerado
-                ],
-                insertProductosPedido
-            )
-                        
-        }
-
-
-        function insertProductosPedido(tr,rsPedido) {
-                idNuevoPedido = rsPedido.insertId
-
-                PedidoActualVue.familias.forEach(function(familiaProductos){        
-                    tr.executeSql(
-                        'INSERT INTO pedidos_familias VALUES (?,?,?,?)', [
-                            null,
-                            idNuevoPedido,
-                            familiaProductos.id,
-                            familiaProductos.descuentoPC
-                        ]
-                    )
-                    console.log(familiaProductos)
-                
-
-                })
-
-                localStorage.setItem('idPedidoVer', idNuevoPedido )
-                window.location.href = "pedido-guardado.html"
-                //window.location.href = "index.html"
-        }
-
-        */
-
-
     }
-
-
 
 }
 
