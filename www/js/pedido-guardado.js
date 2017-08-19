@@ -42,31 +42,45 @@ function pedidoGuardadoCtrl(){
                 "SELECT * FROM familias WHERE id="+familiaPedido.id_familias, [], familiaRegistroCallback.bind(familiaF)
             )
             
-            //obtener los productos pedidos asociados e cada familia
-            /*database.executeSql(
+            //obtener los productos pedidos asociados a cada familia
+            database.executeSql(
                 'SELECT * FROM pedidos_familias_productos WHERE id_pedidos_familias='+familiaPedido.id, [], familiasProductosSqlCallback.bind(familiaF) 
-            )*/
-            listaFamiliasDataDB.push(familiaF)
+            )
+            
 
+            listaFamiliasDataDB.push(familiaF)
         }
         console.log('listaFamiliasDataDB')
         console.log(listaFamiliasDataDB)// porque devuelve un objeto con funciones?
         dataPedidoGuardadoVue.familiasProductos = listaFamiliasDataDB
     }
 
-    function familiaRegistroCallback(rsFamilia){
-        //console.log('registro familia')
-        familia = rsFamilia.rows.item(0)
+
+    function familiaRegistroCallback(rsFamiliaPedido){
+        familia = rsFamiliaPedido.rows.item(0)
         this.nombre = familia.nombre
-        //listaFamiliasDataDB.push(familiaF)
+
+        /*database.executeSql(
+            'SELECT * FROM pedidos_familias_productos WHERE id_pedidos_familias='+this.id, [], familiasProductosSqlCallback.bind(this) 
+        )*/
     }
 
-    function familiasProductosSqlCallback(rsFamiliaProductos) {
-        for(var x = 0; x < rsFamiliaProductos.rows.length; x++) {
-            producto = rsFamiliaProductos.rows.item(x)
-            this.productos.push({
+    function familiasProductosSqlCallback(rsFamiliaProductosPedido) {
+        for(var x = 0; x < rsFamiliaProductosPedido.rows.length; x++) {
+            producto = rsFamiliaProductosPedido.rows.item(x)
+            productoF = {
+                id: producto.id,
                 
-            })
+                nombre: 'producto.nombre',
+                codigo: 'producto.codigo',
+                cajas_x_bulto: 'producto.cajas_x_bulto',//producto.caj_x_bulto,
+                unid_x_caja: 'producto.unid_x_caja',//producto.unid_x_caja,
+                
+                precio_bulto: producto.precio_bulto,// el rpeco bulto del product agregado al pedido
+                cantidad: producto.cantidad
+            
+            }
+            this.productos.push(productoF)
         }
     }
 

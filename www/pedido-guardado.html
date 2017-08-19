@@ -68,7 +68,16 @@
                 <li v-for="familiaProductos in familiasProductos">
                     Familia: {{familiaProductos.id}} {{familiaProductos.nombre}} <br>
                     Descuento: {{familiaProductos.descuentoPC}}
+
+                    <ul>
+                        <li v-for="producto in familiaProductos.productos">
+                            {{ producto.nombre }}
+                            , cantidad {{ producto.cantidad }}
+                            , precio cotizado: {{ producto.precio_bulto }}
+                        </li>
+                    </ul>
                 </li>
+                
             </ul>
     
             <br>
