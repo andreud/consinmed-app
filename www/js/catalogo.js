@@ -49,6 +49,9 @@ function catalogoFamiliaCtrl() {
             marca: {},
             familias: []
         },
+        filters: {
+            formatoDinero: formatoDinero
+        },
 	    methods: {
 	    	familiaVisible: function (familia) {		
 	    		familia.visible=!familia.visible;

@@ -42,6 +42,10 @@ function historicoPedidosCtrl() {
             //this.getPedidos()
         },
 
+        filters: {
+            formatoDinero: formatoDinero
+        },
+
 	    methods: {
 
 	    	irAPedido: function(idPedido) {

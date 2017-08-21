@@ -57,7 +57,7 @@
                             <td>{{producto.unid_x_caja}}</td>
                             <td>{{producto.precio_bulto}}</td>
                             <td>{{producto.cantidad}}</td>
-                            <td>{{producto.total}}</td>
+                            <td>{{producto.total | formatoDinero }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -73,7 +73,7 @@
                       <p class="text-left">Total Bruto</p>
                     </th>
                     <td>
-                      <p class="text-right">{{totales.totalBruto}}</p>
+                      <p class="text-right">{{totales.totalBruto | formatoDinero }}</p>
                     </td>
                 </tr>
                 <tr>
@@ -81,7 +81,7 @@
                       <p class="text-left">Total Descuentos Parciales</p>
                     </th>
                     <td>
-                      <p class="text-right">{{totales.totalDescuentosParciales}}</p>
+                      <p class="text-right">{{totales.totalDescuentosParciales | formatoDinero }}</p>
                     </td>
                 </tr>
                 <tr>
@@ -89,7 +89,7 @@
                       <p class="text-left">Base Imponible</p>
                     </th>
                     <td>
-                      <p class="text-right">{{totales.baseImponible}}</p>
+                      <p class="text-right">{{totales.baseImponible | formatoDinero }}</p>
                     </td>
                 </tr>
                 <tr>
@@ -97,7 +97,7 @@
                       <p class="text-left">IVA (12%)</p>
                     </th>
                     <td>
-                      <p class="text-right">{{totales.iva}}</p>
+                      <p class="text-right">{{totales.iva | formatoDinero }}</p>
                     </td>
                 </tr>
                 <tr>
@@ -105,7 +105,7 @@
                       <p class="text-left">Total Operación</p>
                     </th>
                     <td>
-                      <p class="text-right">{{totales.totalOperacion}}</p>
+                      <p class="text-right">{{totales.totalOperacion | formatoDinero }}</p>
                     </td>
                 </tr>
             </table>

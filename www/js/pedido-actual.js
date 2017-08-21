@@ -39,6 +39,10 @@ function pedidoActualCtrl(){
         mounted: function() {
             this.totalizar()
         },
+        
+        filters: {
+            formatoDinero: formatoDinero
+        },
 
         methods: {
             guardarPedido: guardarPedidoCallback,
@@ -130,7 +134,8 @@ function pedidoActualCtrl(){
             idNuevoPedido = rsPedido.insertId
             FamiliasPedido = []
 
-            PedidoActualVue.familias.forEach(function(familiaProductos){        
+            PedidoActualVue.familias.forEach(function(familiaProductos,i){        
+                i++;
                 FamiliaPedidoF = [
                     null,
                     idNuevoPedido,
@@ -145,9 +150,13 @@ function pedidoActualCtrl(){
                 console.log('familiaProductos.productos')
                 console.log(familiaProductos.productos)
 
+                if( i == PedidoActualVue.familias.length ){
+                    //localStorage.setItem('idPedidoVer', idNuevoPedido )
+                    //window.location.href = "pedido-guardado.html"
+                }
             })
 
-            localStorage.setItem('idPedidoVer', idNuevoPedido )
+            //localStorage.setItem('idPedidoVer', idNuevoPedido )
             //window.location.href = "pedido-guardado.html"
         }
 

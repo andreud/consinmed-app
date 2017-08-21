@@ -52,7 +52,7 @@
                                 <td>{{producto.nombre}}</td>
                                 <td>{{producto.cajas_x_bulto}}</td>
                                 <td>{{producto.unid_x_caja}}</td>
-                                <td>{{producto.precio_bulto}}</td>
+                                <td>{{ producto.precio_bulto | formatoDinero }}</td>
                                 <td><input type="number" v-model="producto.cantidad" placeholder="0"class="form-control"></td>
                             </tr>
                         </div>

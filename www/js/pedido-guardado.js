@@ -41,17 +41,21 @@ function pedidoGuardadoCtrl(){
             database.executeSql(
                 "SELECT * FROM familias WHERE id="+familiaPedido.id_familias, [], familiaRegistroCallback.bind(familiaF)
             )
-            
+        
             //obtener los productos pedidos asociados a cada familia
+            /*
             database.executeSql(
                 'SELECT * FROM pedidos_familias_productos WHERE id_pedidos_familias='+familiaPedido.id, [], familiasProductosSqlCallback.bind(familiaF) 
+            )*/
+            // con join al registro de productos
+            database.executeSql(
+                'SELECT productos.*, pedidos_familias_productos.precio_bulto AS ped_precio_bulto, pedidos_familias_productos.cantidad AS ped_cantidad FROM pedidos_familias_productos JOIN productos ON productos.id=pedidos_familias_productos.id_productos WHERE id_pedidos_familias='+familiaPedido.id, 
+                [], 
+                familiasProductosSqlCallback.bind(familiaF) 
             )
             
-
             listaFamiliasDataDB.push(familiaF)
         }
-        console.log('listaFamiliasDataDB')
-        console.log(listaFamiliasDataDB)// porque devuelve un objeto con funciones?
         dataPedidoGuardadoVue.familiasProductos = listaFamiliasDataDB
     }
 
@@ -59,25 +63,22 @@ function pedidoGuardadoCtrl(){
     function familiaRegistroCallback(rsFamiliaPedido){
         familia = rsFamiliaPedido.rows.item(0)
         this.nombre = familia.nombre
-
-        /*database.executeSql(
-            'SELECT * FROM pedidos_familias_productos WHERE id_pedidos_familias='+this.id, [], familiasProductosSqlCallback.bind(this) 
-        )*/
     }
 
     function familiasProductosSqlCallback(rsFamiliaProductosPedido) {
         for(var x = 0; x < rsFamiliaProductosPedido.rows.length; x++) {
-            producto = rsFamiliaProductosPedido.rows.item(x)
+            productoPedido = rsFamiliaProductosPedido.rows.item(x)
+            console.log(productoPedido)
             productoF = {
-                id: producto.id,
+                //id: productoPedido.id,
                 
-                nombre: 'producto.nombre',
-                codigo: 'producto.codigo',
-                cajas_x_bulto: 'producto.cajas_x_bulto',//producto.caj_x_bulto,
-                unid_x_caja: 'producto.unid_x_caja',//producto.unid_x_caja,
+                nombre: productoPedido.nombre,
+                codigo: productoPedido.codigo,
+                cajas_x_bulto: productoPedido.cajas_x_bulto,//producto.caj_x_bulto,
+                unid_x_caja: productoPedido.unid_x_caja,//producto.unid_x_caja,
                 
-                precio_bulto: producto.precio_bulto,// el rpeco bulto del product agregado al pedido
-                cantidad: producto.cantidad
+                precio_bulto: productoPedido.ped_precio_bulto,// el rpeco bulto del product agregado al pedido
+                cantidad: productoPedido.ped_cantidad
             
             }
             this.productos.push(productoF)
@@ -94,6 +95,10 @@ function pedidoGuardadoCtrl(){
 		el : '#pedidoGuardadoVue',
 		
 		data: dataPedidoGuardadoVue,
+
+        filters: {
+            formatoDinero: formatoDinero
+        },
 
         methods: {
             enviarPedido: function() {

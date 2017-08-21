@@ -36,7 +36,7 @@
                         <td>{{pedido.id}}</td>
                         <td>{{pedido.fecha_generado}}</td>
                         <td>{{pedido.id_clientes}}</td>
-                        <td>{{ parseFloat(pedido.base_imponible) + parseFloat(pedido.iva) }}</td>
+                        <td>{{ parseFloat(pedido.base_imponible) + parseFloat(pedido.iva) | formatoDinero }}</td>
                         <td>
                             <span class="badge" v-bind:class="pedido.status=='enviado'?'badge-success':'badge-danger' ">
                                 {{pedido.status}}

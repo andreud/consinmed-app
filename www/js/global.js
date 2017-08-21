@@ -11,6 +11,28 @@ function errorTransactionGeneral(error) {
 }
 
 
+function formatoDinero(x) {
+    
+    if(!x) {return ''}
+
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    
+    if(!parts[1]) {
+      parts[1] = '00'
+    } else if(parts[1].length==1) {
+      parts[1] = parts[1]+'0'
+    } /*else if(parts[1].length>1) {
+      parts[1] = parts[1].subStr(0,1)
+    }*/
+    return parts.join(".");
+}
+
+
+
+
+
+
 var appGlobal = {
 
     // Application Constructor

@@ -62,23 +62,51 @@
             <br>
 
             <h5>Productos</h5>
-            {{familiasProductos}}
-            <ul>
+       
 
-                <li v-for="familiaProductos in familiasProductos">
-                    Familia: {{familiaProductos.id}} {{familiaProductos.nombre}} <br>
-                    Descuento: {{familiaProductos.descuentoPC}}
 
-                    <ul>
-                        <li v-for="producto in familiaProductos.productos">
-                            {{ producto.nombre }}
-                            , cantidad {{ producto.cantidad }}
-                            , precio cotizado: {{ producto.precio_bulto }}
-                        </li>
-                    </ul>
-                </li>
+            {{ familiasProductos }}
+
+
+
+
+            <div v-for="familia in familiasProductos" >
+                <h4 class="h-familia">
+                  {{familia.nombre}}
+                  <small v-if="familia.descuentoPC!='0'"> 
+                      <br>Descuento: {{familia.descuentoPC}} %
+                  </small>    
+                </h4>
                 
-            </ul>
+                <table class="table table-striped table-responsive">
+                    <thead>
+                        <tr>
+                            <th>Cod</th>
+                            <th>Nombre/Descripcón</th>
+                            <th>Caj x Bulto</th>
+                            <th>Unid x Caja</th>
+                            <th>Precio Bulto</th>
+                            <th width="80px">Cant</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="producto in familia.productos">
+                            <td>{{producto.codigo}}</td>
+                            <td>{{producto.nombre}}</td>
+                            <td>{{producto.cajas_x_bulto}}</td>
+                            <td>{{producto.unid_x_caja}}</td>
+                            <td>{{producto.precio_bulto | formatoDinero }}</td>
+                            <td>{{producto.cantidad}}</td>
+                            <td>{{producto.total | formatoDinero }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                Total Bruto {{familia.nombre}}: {{familia.total | formatoDinero }}
+                  
+                <hr>                      
+            </div> 
     
             <br>
             
@@ -88,7 +116,7 @@
                       <p class="text-left">Total Bruto</p>
                     </th>
                     <td>
-                      <p class="text-right">{{pedido.total_bruto}}</p>
+                      <p class="text-right">{{pedido.total_bruto | formatoDinero }}</p>
                     </td>
                 </tr>
                 <tr>
@@ -104,7 +132,7 @@
                       <p class="text-left">Base Imponible</p>
                     </th>
                     <td>
-                      <p class="text-right">{{pedido.base_imponible}}</p>
+                      <p class="text-right">{{pedido.base_imponible | formatoDinero }}</p>
                     </td>
                 </tr>
                 <tr>
@@ -112,7 +140,7 @@
                       <p class="text-left">IVA (12%)</p>
                     </th>
                     <td>
-                      <p class="text-right">{{pedido.iva}}</p>
+                      <p class="text-right">{{pedido.iva | formatoDinero }}</p>
                     </td>
                 </tr>
                 <tr>
@@ -120,7 +148,7 @@
                       <p class="text-left">Total Operación</p>
                     </th>
                     <td>
-                      <p class="text-right">{{ parseFloat(pedido.base_imponible) + parseFloat(pedido.iva) }}</p>
+                      <p class="text-right">{{ (parseFloat(pedido.base_imponible) + parseFloat(pedido.iva))  | formatoDinero }}</p>
                     </td>
                 </tr>
             </table>
