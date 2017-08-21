@@ -129,26 +129,23 @@ function pedidoActualCtrl(){
         
         // Inserta familias del pedido
         function insertFamiliasProductosCallback(rsPedido) {
-            console.log('insertFamiliasProductosCallback')
-            
+
             idNuevoPedido = rsPedido.insertId
-            FamiliasPedido = []
+            //FamiliasPedido = []
 
             PedidoActualVue.familias.forEach(function(familiaProductos,i){        
                 i++;
+                
                 FamiliaPedidoF = [
                     null,
                     idNuevoPedido,
                     familiaProductos.id,
                     familiaProductos.descuentoPC
                 ]
-                console.log('FamiliaPedidoF')
-                console.log(FamiliaPedidoF)
-                FamiliasPedido.push(FamiliaPedidoF)
+
+                //FamiliasPedido.push(FamiliaPedidoF)
                 database.executeSql('INSERT INTO pedidos_familias VALUES (?,?,?,?)', FamiliaPedidoF, insertProductosCallback.bind(familiaProductos.productos) )
-                
-                console.log('familiaProductos.productos')
-                console.log(familiaProductos.productos)
+
 
                 if( i == PedidoActualVue.familias.length ){
                     //localStorage.setItem('idPedidoVer', idNuevoPedido )
