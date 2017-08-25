@@ -110,7 +110,7 @@ function pedidoActualCtrl(){
         var ultimaFamilia = false
         var familiasProductos = PedidoActualVue.familias
         var nFamilias = familiasProductos.length
-        var countFamilias = 0
+        //var countFamilias = 0
         var globalRsPedido = 0
 
 
@@ -137,21 +137,15 @@ function pedidoActualCtrl(){
         
         // Inserta familias y productos del pedido
         function insertFamiliasProductosCallback(rsPedido) {
-            console.log('insertFamiliasProductosCallback')    
-            
+
             globalRsPedido = rsPedido
             var idNuevoPedido = rsPedido.insertId
-            var familiaProductos = familiasProductos.shift()//
-            countFamilias++
+            var familiaProductos = familiasProductos.shift()
         
             if (familiaProductos===undefined) {
                 localStorage.setItem('idPedidoVer', idNuevoPedido )
                 window.location.href = "pedido-guardado.html"
             }
-
-            /*if (countFamilias==nFamilias){
-                ultimaFamilia = true; console.log('ultimaFamilia = true')
-            }*/
 
             // Inserta familias del pedido
             FamiliaPedidoF = [
@@ -170,26 +164,13 @@ function pedidoActualCtrl(){
 
         // Inserta productos del pedido
         function insertProductosCallback(rsInsertFamilia) {
-            console.log('insertProductosCallback')
+
             newPedidoFamiliaID = rsInsertFamilia.insertId
-            
-            //nProductosFamilia = this.length
             producto = this.shift()
-            
-            console.log('ultimaFamilia2')
-            console.log(ultimaFamilia)
-            console.log('producto')
-            console.log(producto)
-            
+           
             if( !producto  ){
                 insertFamiliasProductosCallback(globalRsPedido)
             }
-
-            /*if( ultimaFamilia == true ){
-                //localStorage.setItem('idPedidoVer', idNuevoPedido )
-                insertFamiliasProductosCallback(globalRsPedido)
-            }*/
-           
 
             boundInsertProductosCallback = insertProductosCallback.bind(this)
 
@@ -200,19 +181,11 @@ function pedidoActualCtrl(){
                     producto.id,
                     producto.cantidad,
                     producto.precio_bulto
-                ]
-                //,callback
-                , function(){
-                    //insertFamiliasProductosCallback(globalRsPedido)        
+                ], 
+                function(){
                     boundInsertProductosCallback(rsInsertFamilia)
-                    //if( ){
-                        //insertFamiliasProductosCallback(globalRsPedido)       
-                    //}
                 }
             )
-
-            //insertProductosCallback(rsInsertFamilia)     ///bind, apply o call "this" ?    
-            //insertFamiliasProductosCallback(globalRsPedido)
         }
 
 
