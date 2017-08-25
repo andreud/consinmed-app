@@ -46,6 +46,7 @@ function pedidoActualCtrl(){
 
         methods: {
             guardarPedido: guardarPedidoCallback,
+            
             totalizar: function() {
                 var totalBruto = 0,
                     descuentosParcialesMonto = 0
@@ -106,6 +107,13 @@ function pedidoActualCtrl(){
         var mes = parseInt(hoy.getMonth())+1
         var fechaGenerado = hoy.getDate() + '/' + mes + '/' + hoy.getFullYear()
         
+        var ultimaFamilia = false
+        var familiasProductos = PedidoActualVue.familias
+        var nFamilias = familiasProductos.length
+        var countFamilias = 0
+        var globalRsPedido = 0
+
+
         // Inserta info basica del pedido
         database.executeSql(
             'INSERT INTO pedidos VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
@@ -127,56 +135,89 @@ function pedidoActualCtrl(){
             ,insertFamiliasProductosCallback
         )
         
-        // Inserta familias del pedido
+        // Inserta familias y productos del pedido
         function insertFamiliasProductosCallback(rsPedido) {
+            console.log('insertFamiliasProductosCallback')    
+            
+            globalRsPedido = rsPedido
+            var idNuevoPedido = rsPedido.insertId
+            var familiaProductos = familiasProductos.shift()//
+            countFamilias++
+        
+            if (familiaProductos===undefined) {
+                localStorage.setItem('idPedidoVer', idNuevoPedido )
+                window.location.href = "pedido-guardado.html"
+            }
 
-            idNuevoPedido = rsPedido.insertId
-            //FamiliasPedido = []
+            /*if (countFamilias==nFamilias){
+                ultimaFamilia = true; console.log('ultimaFamilia = true')
+            }*/
 
-            PedidoActualVue.familias.forEach(function(familiaProductos,i){        
-                i++;
-                
-                FamiliaPedidoF = [
-                    null,
-                    idNuevoPedido,
-                    familiaProductos.id,
-                    familiaProductos.descuentoPC
-                ]
-
-                //FamiliasPedido.push(FamiliaPedidoF)
-                database.executeSql('INSERT INTO pedidos_familias VALUES (?,?,?,?)', FamiliaPedidoF, insertProductosCallback.bind(familiaProductos.productos) )
-
-
-                if( i == PedidoActualVue.familias.length ){
-                    //localStorage.setItem('idPedidoVer', idNuevoPedido )
-                    //window.location.href = "pedido-guardado.html"
-                }
-            })
-
-            //localStorage.setItem('idPedidoVer', idNuevoPedido )
-            //window.location.href = "pedido-guardado.html"
+            // Inserta familias del pedido
+            FamiliaPedidoF = [
+                null,
+                idNuevoPedido,
+                familiaProductos.id,
+                familiaProductos.descuentoPC
+            ]            
+            database.executeSql('INSERT INTO pedidos_familias VALUES (?,?,?,?)', 
+                FamiliaPedidoF, 
+                insertProductosCallback.bind(familiaProductos.productos) 
+            )
+            
         }
+
 
         // Inserta productos del pedido
         function insertProductosCallback(rsInsertFamilia) {
-            
+            console.log('insertProductosCallback')
             newPedidoFamiliaID = rsInsertFamilia.insertId
             
-            //familiaProductos.productos.forEach(function(producto) {
-            this.forEach(function(producto) {
-                database.executeSql(
-                    'INSERT INTO pedidos_familias_productos VALUES (?,?,?,?,?)',[
-                        null,
-                        newPedidoFamiliaID,
-                        producto.id,
-                        producto.cantidad,
-                        producto.precio_bulto
-                    ]
-                )
-            })
+            //nProductosFamilia = this.length
+            producto = this.shift()
+            
+            console.log('ultimaFamilia2')
+            console.log(ultimaFamilia)
+            console.log('producto')
+            console.log(producto)
+            
+            if( !producto  ){
+                insertFamiliasProductosCallback(globalRsPedido)
+            }
+
+            /*if( ultimaFamilia == true ){
+                //localStorage.setItem('idPedidoVer', idNuevoPedido )
+                insertFamiliasProductosCallback(globalRsPedido)
+            }*/
+           
+
+            boundInsertProductosCallback = insertProductosCallback.bind(this)
+
+            database.executeSql(
+                'INSERT INTO pedidos_familias_productos VALUES (?,?,?,?,?)',[
+                    null,
+                    newPedidoFamiliaID,
+                    producto.id,
+                    producto.cantidad,
+                    producto.precio_bulto
+                ]
+                //,callback
+                , function(){
+                    //insertFamiliasProductosCallback(globalRsPedido)        
+                    boundInsertProductosCallback(rsInsertFamilia)
+                    //if( ){
+                        //insertFamiliasProductosCallback(globalRsPedido)       
+                    //}
+                }
+            )
+
+            //insertProductosCallback(rsInsertFamilia)     ///bind, apply o call "this" ?    
+            //insertFamiliasProductosCallback(globalRsPedido)
         }
 
+
     }
+
 
 }
 
