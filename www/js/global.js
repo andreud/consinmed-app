@@ -1,31 +1,42 @@
+/**
+ * Database
+ */
 function initDatabase() {
-  //contenido
   var database = window.sqlitePlugin.openDatabase({name: 'mydb22.db', location: 'default', createFromLocation: 1});
-  return database;
-  //global scope
   //database = window.sqlitePlugin.openDatabase({name: 'mydb3.db', location: 'default', createFromLocation: 1});
+  return database;
 }
 
 function errorTransactionGeneral(error) {
-    alert('General SELECT error: ' + error.message)
+    alert('Error General Base de Datos: ' + error.message)
 }
 
 
+/**
+ * Utilidades, Vue Filters 
+ */
 function formatoDinero(x) {
     
     if(!x) {return 0.0}
 
-    var parts = x.toString().split(".");
+    //parseFloat(x)
+
+    //xf = x.toFixed(2)
+    xf = parseFloat(x).toFixed(2)
+    
+    var parts = xf.toString().split(".");
+    
+
+    //var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     
     if(!parts[1]) {
       parts[1] = '00'
     } else if(parts[1].length==1) {
       parts[1] = parts[1]+'0'
-    } /*else if(parts[1].length>1) {
-      parts[1] = parts[1].subStr(0,1)
-    }*/
-    return parts.join(",");
+    } 
+    //return parts.join(",") + ' | ' + typeof(xf) + ' | ';
+    return parts.join(",")
 }
 
 
@@ -47,13 +58,7 @@ var appGlobal = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
 
-    	/**
-    	 * Database
-    	 */
-    	//database = initDatabase();
-
-
-    	/**
+    /**
 		 * Navbar Global 
 		 */
 		var templateNavbar = '<div><nav class="navbar navbar-toggleable-md fixed-top">'

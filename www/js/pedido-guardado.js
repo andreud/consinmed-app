@@ -97,7 +97,9 @@ function pedidoGuardadoCtrl(){
 		data: dataPedidoGuardadoVue,
 
         filters: {
+
             formatoDinero: formatoDinero
+
         },
 
         computed: {
@@ -110,13 +112,16 @@ function pedidoGuardadoCtrl(){
                 return this.totalNeto * (this.pedido.descuento_glob_pc/100)  
             }
 
-
         },
 
         methods: {
+
             enviarPedido: function() {
                 // body...
+                var url = 'http://localhost/consinmed-panel/public/api/pedido/crete'
+                
             }
+
         }
 
 	})

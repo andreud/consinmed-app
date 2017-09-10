@@ -101,7 +101,7 @@ function catalogoFamiliaCtrl() {
 
     // Obtener todos los clientes 
     listaClientesDataDB = []
-    database.executeSql('SELECT * FROM clientes', [], function(/*tr,*/ rs){
+    database.executeSql('SELECT * FROM clientes', [], function(rs){
         for(var x = 0; x < rs.rows.length; x++) {
             listaClientesDataDB.push(rs.rows.item(x))
         }
@@ -110,7 +110,7 @@ function catalogoFamiliaCtrl() {
 
     // Obtener el registro de la marca seleccionada
     marcaF = {};
-    database.executeSql('SELECT * FROM marcas WHERE id='+idMarca,[], function(/*tr,*/ rsMarca) {
+    database.executeSql('SELECT * FROM marcas WHERE id='+idMarca,[], function(rsMarca) {
         marcaF = rsMarca.rows.item(0)
         catalogoMarca.marca = marcaF
     })
