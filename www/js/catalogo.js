@@ -62,14 +62,10 @@ function catalogoFamiliaCtrl() {
 
                 // Recoge los productos que se agregaron en un arbol familias-productos
 	    		var familiasProductosSelecMarca = []	    		
-                _.forEach(this.familias, function(familia) { //vue foreach?
+                _.forEach(this.familias, function(familia) {
 	    			productosSeleccionados = _.filter(familia.productos, function(producto) {
     					return producto.cantidad!='0' && producto.cantidad!=''  
     				})
-
-                    /*productosSeleccionados = _.each(productosSeleccionados, function(producto) {
-                        producto.total = 0; 
-                    })*/
 	    			
 	    			if( ! _.isEmpty(productosSeleccionados) ) {
 		    			familiasProductosSelecMarca.push({
@@ -81,8 +77,6 @@ function catalogoFamiliaCtrl() {
 		    			})
 		    		}
                 })
-
-	    		//console.log(familiasProductosSelecMarca)
                 localStorage.setItem("productosSelecMarca", JSON.stringify(familiasProductosSelecMarca) )
 	    		window.location.href = 'pedido-actual.html'
 	    	},
@@ -128,8 +122,7 @@ function catalogoFamiliaCtrl() {
     // Pasa la data estructurada al Vue
     catalogoMarca.familias = familiasProductosDB
     
-    function sqlFamiliasCallback(/*tr,*/ rsFamilias){
-        //alert(JSON.stringify(rsFamilias))
+    function sqlFamiliasCallback(rsFamilias){
         for(var x = 0; x < rsFamilias.rows.length; x++) {
             familia = rsFamilias.rows.item(x)
             familiaF = {
@@ -148,7 +141,7 @@ function catalogoFamiliaCtrl() {
         }     
     }
 
-    function sqlProductosCallback(/*tr,*/rsProductos){
+    function sqlProductosCallback(rsProductos){
         for(var i = 0; i < rsProductos.rows.length; i++) {
             producto = rsProductos.rows.item(i)
             //familiasProductosDB[x].productos.push({
@@ -166,14 +159,7 @@ function catalogoFamiliaCtrl() {
     }
 
 
-    
-
 }
-
-
-
-
-
 
 
 /**
@@ -186,32 +172,10 @@ var app = {
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-          
-         
-
     },
 
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        //this.receivedEvent('deviceready');
-    
         catalogoFamiliaCtrl(); 
-
-    },
-
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
     }
 }
 app.initialize()

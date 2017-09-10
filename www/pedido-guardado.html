@@ -87,16 +87,20 @@
                         <tr v-for="producto in familia.productos">
                             <td>{{producto.codigo}}</td>
                             <td>{{producto.nombre}}</td>
-                            <td>{{producto.cajas_x_bulto}}</td>
-                            <td>{{producto.unid_x_caja}}</td>
-                            <td>{{producto.precio_bulto | formatoDinero }}</td>
-                            <td>{{producto.cantidad}}</td>
-                            <td>{{producto.total | formatoDinero }}</td>
+                            <td class="text-center" >{{producto.cajas_x_bulto}}</td>
+                            <td class="text-center" >{{producto.unid_x_caja}}</td>
+                            <td class="text-right">{{producto.precio_bulto | formatoDinero }}</td>
+                            <td class="text-center">{{producto.cantidad}}</td>
+                            <td class="text-right">{{producto.total | formatoDinero }}</td>
                         </tr>
                     </tbody>
                 </table>
 
-                Total Bruto {{familia.nombre}}: {{familia.total | formatoDinero }}
+               <small>Total Bruto {{familia.nombre}}: {{familia.total | formatoDinero }}</small><br>
+                <small v-if="familia.descuentoPC>0">
+                  Descuento {{familia.nombre}}: {{ familia.total*(1/familia.descuentoPC) | formatoDinero }} 
+                </small>
+                
                   
                 <hr>                      
             </div> 
@@ -117,15 +121,46 @@
                       <p class="text-left">Total Descuentos Parciales</p>
                     </th>
                     <td>
-                      <p class="text-right">totales.totalDescuentosParciales</p>
+                      <p class="text-right">{{ pedido.descuentos_parc_monto | formatoDinero }}</p>
                     </td>
                 </tr>
+
+                <tr>
+                    <th>
+                      <p class="text-left">Total Neto</p>
+                    </th>
+                    <td>
+                      <p class="text-right">
+                         <!-- (pedido.total_bruto - pedido.descuentos_parc_monto) | formatoDinero  -->
+                         {{ totalNeto | formatoDinero }}
+
+                        </p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                      <p class="text-left">
+                        Descuento Global 
+                        ({{pedido.descuento_glob_pc}}%)
+                      </p>
+                    </th>
+                    <td>
+                      <p class="text-right">
+                         <!-- pedido.descuento_glob_pc -->
+                        {{ descuentoGlobMonto | formatoDinero }}
+                      </p>
+                    </td>
+                </tr>
+
                 <tr>
                     <th>
                       <p class="text-left">Base Imponible</p>
                     </th>
                     <td>
-                      <p class="text-right">{{pedido.base_imponible | formatoDinero }}</p>
+                      <p class="text-right">
+                        {{ pedido.base_imponible | formatoDinero }}
+                      </p>
                     </td>
                 </tr>
                 <tr>

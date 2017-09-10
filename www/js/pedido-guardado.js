@@ -100,6 +100,19 @@ function pedidoGuardadoCtrl(){
             formatoDinero: formatoDinero
         },
 
+        computed: {
+
+            totalNeto : function () {
+                return this.pedido.total_bruto - this.pedido.descuentos_parc_monto
+            },
+
+            descuentoGlobMonto: function() {
+                return this.totalNeto * (this.pedido.descuento_glob_pc/100)  
+            }
+
+
+        },
+
         methods: {
             enviarPedido: function() {
                 // body...

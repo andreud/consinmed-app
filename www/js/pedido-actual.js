@@ -18,10 +18,10 @@ function pedidoActualCtrl(){
             familias: productosSelecMarca,
             totales:{
                 totalBruto : 0,
-                totalDescuentosParciales: 0,
-                totalNeto: 0, //to-do
-                descuentoGlobalPC: 0, //to-do
-                descuentoGlobalMonto: 0, //to-do
+                totalDescuentosParciales: 0,//to do
+                descuentoGlobPC: 0, //to-do
+                descuentoGlobMonto: 0,                                    
+                totalNeto: 0, //to-do backend
                 baseImponible:0,
                 iva:0,
                 totalOperacion:0
@@ -74,9 +74,17 @@ function pedidoActualCtrl(){
 
                 this.totales.totalBruto = totalBruto
                 this.totales.totalDescuentosParciales = descuentosParcialesMonto
-                this.totales.baseImponible = totalBruto - descuentosParcialesMonto
+                this.totales.totalNeto = totalBruto - descuentosParcialesMonto
+                
+                if(this.totales.descuentoGlobPC>0) {
+                    this.totales.descuentoGlobMonto = this.totales.totalNeto * (1/this.totales.descuentoGlobPC)
+                } else {
+                    this.totales.descuentoGlobMonto = 0
+                }
+
+                this.totales.baseImponible = this.totales.totalNeto - this.totales.descuentoGlobMonto
                 this.totales.iva = this.totales.baseImponible * 0.12
-                this.totales.totalOperacion = this.totales.baseImponible + this.totales.iva 
+                this.totales.totalOperacion = this.totales.baseImponible + this.totales.iva
             }
         }
         
@@ -107,16 +115,12 @@ function pedidoActualCtrl(){
         var mes = parseInt(hoy.getMonth())+1
         var fechaGenerado = hoy.getDate() + '/' + mes + '/' + hoy.getFullYear()
         
-        var ultimaFamilia = false
         var familiasProductos = PedidoActualVue.familias
-        var nFamilias = familiasProductos.length
-        //var countFamilias = 0
         var globalRsPedido = 0
-
 
         // Inserta info basica del pedido
         database.executeSql(
-            'INSERT INTO pedidos VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            'INSERT INTO pedidos VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             [
                 null, 
                 1, // TO-DO usuario logeado o defecto
@@ -128,17 +132,19 @@ function pedidoActualCtrl(){
                 PedidoActualVue.meta.despachoOtroTransporte,
                 PedidoActualVue.meta.observaciones,
                 PedidoActualVue.totales.totalBruto,
+                PedidoActualVue.totales.totalDescuentosParciales,
+                PedidoActualVue.totales.descuentoGlobPC,//////////
+               // PedidoActualVue.totales.descuentoGlobMonto,//////////
                 PedidoActualVue.totales.baseImponible,
                 PedidoActualVue.totales.iva,
                 fechaGenerado
-            ]
-            ,insertFamiliasProductosCallback
+            ],
+            insertFamiliasProductosCallback
         )
         
         // Inserta familias y productos del pedido
         function insertFamiliasProductosCallback(rsPedido) {
-
-            globalRsPedido = rsPedido
+            globalRsPedido = rsPedido // disponible para el llamado recursivo desde insertProductosCallback
             var idNuevoPedido = rsPedido.insertId
             var familiaProductos = familiasProductos.shift()
         
@@ -148,17 +154,14 @@ function pedidoActualCtrl(){
             }
 
             // Inserta familias del pedido
-            FamiliaPedidoF = [
-                null,
-                idNuevoPedido,
-                familiaProductos.id,
-                familiaProductos.descuentoPC
-            ]            
-            database.executeSql('INSERT INTO pedidos_familias VALUES (?,?,?,?)', 
-                FamiliaPedidoF, 
+            database.executeSql('INSERT INTO pedidos_familias VALUES (?,?,?,?)',[
+                    null,
+                    idNuevoPedido,
+                    familiaProductos.id,
+                    familiaProductos.descuentoPC
+                ], 
                 insertProductosCallback.bind(familiaProductos.productos) 
             )
-            
         }
 
 
@@ -189,8 +192,8 @@ function pedidoActualCtrl(){
         }
 
 
-    }
 
+    }
 
 }
 
