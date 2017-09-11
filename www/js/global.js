@@ -63,7 +63,7 @@ var appGlobal = {
 		 */
 		var templateNavbar = '<div><nav class="navbar navbar-toggleable-md fixed-top">'
 		  +'<a class="navbar-brand" href="home.html">'
-		    +'<img src="img/logo_lg.png" alt="" class="logo">'
+		    +'<img src="img/logo_nb.png" alt="" class="logo">'
 		  +'</a>'
 		+'</nav></div>'
 		var Navbar = new Vue({
