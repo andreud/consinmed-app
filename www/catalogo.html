@@ -39,7 +39,7 @@
                         <thead>
                             <tr>
                                 <th>Cod</th>
-                                <th>Nombre/Descripcón</th>
+                                <th>Nombre/Descripción</th>
                                 <th>Caj x Bulto</th>
                                 <th>Unid x Caja</th>
                                 <th>Precio Bulto</th>
@@ -50,10 +50,12 @@
                             <tr v-for="producto in familia.productos">
                                 <td>{{producto.codigo}}</td>
                                 <td>{{producto.nombre}}</td>
-                                <td>{{producto.cajas_x_bulto}}</td>
-                                <td>{{producto.unid_x_caja}}</td>
-                                <td>{{ producto.precio_bulto | formatoDinero }}</td>
-                                <td><input type="number" v-model="producto.cantidad" placeholder="0"class="form-control"></td>
+                                <td class="text-center">{{producto.cajas_x_bulto}}</td>
+                                <td class="text-center">{{producto.unid_x_caja}}</td>
+                                <td class="text-right">{{ producto.precio_bulto | formatoDinero }}</td>
+                                <td>
+                                    <input type="number" v-model="producto.cantidad" placeholder="0"class="form-control">
+                                </td>
                             </tr>
                         </div>
                         </tbody>

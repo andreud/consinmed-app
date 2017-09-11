@@ -91,14 +91,14 @@
                             <td class="text-center" >{{producto.unid_x_caja}}</td>
                             <td class="text-right">{{producto.precio_bulto | formatoDinero }}</td>
                             <td class="text-center">{{producto.cantidad}}</td>
-                            <td class="text-right">{{producto.total | formatoDinero }}</td>
+                            <td class="text-right">{{ (producto.cantidad*producto.precio_bulto) | formatoDinero }}</td>
                         </tr>
                     </tbody>
                 </table>
 
-               <small>Total Bruto {{familia.nombre}}: {{familia.total | formatoDinero }}</small><br>
+                <small>Total Bruto {{familia.nombre}}: {{familia.totalFamilia | formatoDinero }}</small><br>
                 <small v-if="familia.descuentoPC>0">
-                  Descuento {{familia.nombre}}: {{ familia.total*(1/familia.descuentoPC) | formatoDinero }} 
+                  Descuento {{familia.nombre}}: {{ familia.totalFamilia*(1/familia.descuentoPC) | formatoDinero }} 
                 </small>
                 
                   
@@ -184,8 +184,22 @@
             <p v-if="pedido.status=='no_enviado'" style="text-align: center;">
                 <button 
                     v-on:click="enviarPedido()"
-                    class="btn btn-primary btn-lg"><i class="fa fa-send fa-fw"></i> Enviar Pedido</button>
+                    class="btn btn-primary btn-lg">
+                        <i class="fa fa-send fa-fw"></i> Enviar Pedidox
+                </button>
             </p>
+
+            <div v-show="formEnviarVisible">
+                
+                <p>No hay conexión disponible</p>
+
+                <!-- <p>
+                    <input type="checkbox" >
+                    Ciente
+                </p> -->
+
+
+            </div>
   
         </div>
         <!-- fin VUEJS -->

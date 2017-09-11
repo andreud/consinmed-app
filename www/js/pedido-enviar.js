@@ -4,8 +4,7 @@ function pedidoGuardadoCtrl(){
     dataPedidoGuardadoVue = {
         pedido: {},
         cliente: {},
-        familiasProductos: [],
-        formEnviarVisible: false
+        familiasProductos: []
     }
 
 
@@ -126,7 +125,6 @@ function pedidoGuardadoCtrl(){
 
             enviarPedido: function() {
                 // body...
-                this.formEnviarVisible = true
                 var url = 'http://localhost/consinmed-panel/public/api/pedido/crete'
                 
             }
