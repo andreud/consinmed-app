@@ -1,7 +1,20 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <!-- Original 
+            "Refused to connect to ... because it violates the following Content Security Policy directive: "default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'". Note that 'connect-src' was not explicitly set, so 'default-src' is used as a fallback." -->
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+
+        <!-- Original + URL api domain: 404 -->
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: http://consinmed-panel.herokuapp.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+
+        <!-- 
+        SO1: 404
+        https://stackoverflow.com/questions/31211359/refused-to-load-the-script-because-it-violates-the-following-content-security-po#33642737 -->
+
+        <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://consinmed-panel.herokuapp.com 'unsafe-inline' 'unsafe-eval'"> 
+
+
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -181,25 +194,26 @@
                 </tr>
             </table>
 
-            <p v-if="pedido.status=='no_enviado'" style="text-align: center;">
+            <div v-if="pedido.status=='no_enviado'" style="text-align: center;">
+                <div v-show="formEnviarVisible">
+                
+                    <p>Enviando...</p>
+                    {{ marcas }}
+                    <!-- <p>
+                        <input type="checkbox" >
+                        Ciente
+                    </p> -->
+
+                </div>
+                <br>
                 <button 
                     v-on:click="enviarPedido()"
                     class="btn btn-primary btn-lg">
-                        <i class="fa fa-send fa-fw"></i> Enviar Pedidox
+                        <i class="fa fa-send fa-fw"></i> Enviar Pedido
                 </button>
-            </p>
-
-            <div v-show="formEnviarVisible">
-                
-                <p>No hay conexión disponible</p>
-
-                <!-- <p>
-                    <input type="checkbox" >
-                    Ciente
-                </p> -->
-
-
             </div>
+
+        
   
         </div>
         <!-- fin VUEJS -->
@@ -208,7 +222,7 @@
         <script src="cordova.js"></script>
         <script src="js/libs/lodash.js"></script>
         <script src="js/libs/vue.js"></script>
-        <script src="js/data-test.js"></script>
+        <script src="js/libs/axios.min.js"></script>
         <script src="js/global.js"></script>
         <script src="js/pedido-guardado.js"></script>
 

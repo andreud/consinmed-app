@@ -5,7 +5,8 @@ function pedidoGuardadoCtrl(){
         pedido: {},
         cliente: {},
         familiasProductos: [],
-        formEnviarVisible: false
+        formEnviarVisible: false,
+        marcas: '' //para probar el api
     }
 
 
@@ -46,11 +47,8 @@ function pedidoGuardadoCtrl(){
             )
         
             //obtener los productos pedidos asociados a cada familia
-            /*
-            database.executeSql(
-                'SELECT * FROM pedidos_familias_productos WHERE id_pedidos_familias='+familiaPedido.id, [], familiasProductosSqlCallback.bind(familiaF) 
-            )*/
-            // con join al registro de productos
+            /*database.executeSql('SELECT * FROM pedidos_familias_productos WHERE id_pedidos_familias='+familiaPedido.id, [], familiasProductosSqlCallback.bind(familiaF) )*/
+            // con join al registro de productos:
             database.executeSql(
                 'SELECT productos.*, pedidos_familias_productos.precio_bulto AS ped_precio_bulto, pedidos_familias_productos.cantidad AS ped_cantidad FROM pedidos_familias_productos JOIN productos ON productos.id=pedidos_familias_productos.id_productos WHERE id_pedidos_familias='+familiaPedido.id, 
                 [], 
@@ -125,9 +123,27 @@ function pedidoGuardadoCtrl(){
         methods: {
 
             enviarPedido: function() {
-                // body...
-                this.formEnviarVisible = true
-                var url = 'http://localhost/consinmed-panel/public/api/pedido/crete'
+                if( checkConnection() ) {
+
+                    this.formEnviarVisible = true
+                    //var url = 'http://localhost/consinmed-panel/public/api/pedido/create'
+                    var url = apiBaseUrl + 'marcas'
+                    var vm = this
+                    axios.get(url)
+                        .then( function(res) {
+                            vm.marcas = JSON.stringify(res)
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
+                     
+                } else {
+
+                    alert('No está conectado a internet')
+                    //1 561 6182278
+
+                }
+                
+                
                 
             }
 
