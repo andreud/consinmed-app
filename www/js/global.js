@@ -4,7 +4,7 @@ var apiBaseUrl = 'http://consinmed-panel.herokuapp.com/api/'
  * Database
  */
 function initDatabase() {
-  var database = window.sqlitePlugin.openDatabase({name: 'mydb24nomarcas_nofamilias_4.db', location: 'default', createFromLocation: 1});
+  var database = window.sqlitePlugin.openDatabase({name: 'mydb25_wo_marc_fam_prod_clie_3.db', location: 'default', createFromLocation: 1});
   //database = window.sqlitePlugin.openDatabase({name: 'mydb3.db', location: 'default', createFromLocation: 1});
   return database;
 }

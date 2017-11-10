@@ -242,14 +242,15 @@ function sincronizarCtrl() {
                             );
                         } else if(rsCliente.rows.length==0) {
                             // cliente no existe en local, insertar
-                            console.log('cliente ' + cliente.nombre + cliente.id + ' NO existe en local, insertar')
-                            database.executeSql('INSERT INTO clientes VALUES (?,?,?,?,?,?)', [
+                            console.log('cliente ' + cliente.razon_social + cliente.id + ' NO existe en local, insertar')
+                            database.executeSql('INSERT INTO clientes VALUES (?,?,?,?,?,?,?)', [
                                 cliente.id,
                                 cliente.razon_social,
                                 cliente.rif,
                                 cliente.email,
                                 cliente.contacto_nombre,
                                 cliente.telefono,
+                                cliente.direccion
                             ]);
                         }
                     })
