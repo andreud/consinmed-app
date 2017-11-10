@@ -127,14 +127,14 @@ function pedidoGuardadoCtrl(){
 
                     this.formEnviarVisible = true
                     //var url = 'http://localhost/consinmed-panel/public/api/pedido/create'
-                    var url = apiBaseUrl + 'marcas'
+                    var url = apiBaseUrl + 'pedidos'
                     var vm = this
-                    axios.get(url)
+                    /*axios.get(url)
                         .then( function(res) {
                             vm.marcas = JSON.stringify(res)
                         }).catch(function (error) {
                             console.log(error);
-                        });
+                        });*/
                      
                 } else {
 

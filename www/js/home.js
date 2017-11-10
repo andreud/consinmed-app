@@ -39,7 +39,7 @@ function HomeCtrl() {
     listaMarcasDataDB = []
     //database.transaction(
     //    function(transaction) {
-            database.executeSql( "SELECT * FROM marcas", [], function(/*transaction,*/ rs) {
+            database.executeSql( "SELECT * FROM marcas ORDER BY orden", [], function(/*transaction,*/ rs) {
                 //alert('Primer registro marcas: ' + JSON.stringify(rs.rows.item(0)) )
                 for(var x = 0; x < rs.rows.length; x++) {
                     listaMarcasDataDB.push(rs.rows.item(x))

@@ -18,12 +18,37 @@
 
             <div id="sincronizarDataVue">
                 
-                <div class="sincMarcas">
-                    {{marcasAPI}}
+                <div v-if="sincronizando">
+                    <h5 class="text-center"><i class="fa fa-refresh fa-fw"></i>Sincronizando data...</h5><hr>
+                </div>
+                        
+    
+                <div>
+                    <!-- {{marcasAPI}} -->
+                    <!-- <div v-if="sincronizandoMarcas">Sincronizando Marcas</div> -->
+                    <div v-show="marcasListo">
+                        <p><i class="fa fa-list fa-fw"></i>Marcas sincronizadas</p>
+                    </div>
                 </div>
 
-                <div class="sincFamilias">
-                    
+                <div>
+                    <div v-show="familiasListo">
+                        <p><i class="fa fa-list fa-fw"></i>Familias sincronizadas</p>
+                    </div>
+                </div>
+
+                <div>
+                    <div v-show="productosListo">
+                        <p><i class="fa fa-list fa-fw"></i>Productos sincronizados</p>
+                    </div>
+                </div>
+
+                <div>
+                    <div v-show="clientesListo">
+                        <p><i class="fa fa-list fa-fw"></i>Clientes sincronizados</p>
+                        <hr>
+                        <h5 class="text-center"><i class="fa fa-check fa-fw"></i>Sincronización Completa.</h5>
+                    </div>
                 </div>
 
 
