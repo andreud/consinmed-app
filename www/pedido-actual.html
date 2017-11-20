@@ -105,6 +105,8 @@
                          <option value="20">20%</option>
                          <option value="25">25%</option>
                          <option value="30">30%</option>
+                         <option value="40">40%</option>
+                         <option value="50">50%</option>
                       </select>
 
                     </th>
@@ -122,14 +124,38 @@
                       <p class="text-right">{{totales.baseImponible | formatoDinero }}</p>
                     </td>
                 </tr>
+
+                <!-- Nuevo campo "modalidad de pago" afecta el % del iva  -->
                 <tr>
                     <th>
-                      <p class="text-left">IVA (12%)</p>
+                      <p class="text-left">Modalidad de pago</p>
+                    </th>
+                    <td>
+                      <p class="text-right">
+                        <select v-model="meta.modalidadPago" 
+                                v-on:change="totalizar"
+                                class="form-control">
+                          <option value="transferencia">Transferencia</option>
+                          <option value="cheque">Cheque</option>
+                        </select>
+                      </p>
+                    </td>
+                </tr>
+                
+                <!-- IVA pasa a ser dinamico, nuevo campo, pedido -->
+                <tr>
+                    <th>
+                      <p class="text-left">
+                        IVA ( <input type="number" v-model="ivaPC" class="form-control" style="display:inline;width:25px;padding: 2px"> %)
+                        
+                      </p>
                     </th>
                     <td>
                       <p class="text-right">{{totales.iva | formatoDinero }}</p>
                     </td>
                 </tr>
+                
+
                 <tr>
                     <th>
                       <p class="text-left">Total Operación</p>
@@ -167,7 +193,9 @@
                        <option value="Crédito 5 dias">Crédito 5 dias</option>
                        <option value="Crédito 7 dias">Crédito 7 dias</option>
                        <option value="Crédito 15 dias">Crédito 15 dias</option>
+                       <option value="Crédito 10 dias">Crédito 10 dias</option>
                        <option value="Crédito 20 dias">Crédito 20 dias</option>
+                       <option value="Crédito 30 dias">Crédito 30 dias</option>
                    </select>            
                 </div>
                 

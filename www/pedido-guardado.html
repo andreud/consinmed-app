@@ -44,6 +44,10 @@
                     &nbsp; {{cliente.razon_social}}
                 </div>
                 <div class="list-group-item">
+                    <small>Tipo de cliente</small>
+                    &nbsp; {{ pedido.tipo_cliente }}
+                </div>
+                <div class="list-group-item">
                     <small>Nro Orden Cliente</small> 
                     &nbsp; {{pedido.n_orden_cliente}}
                 </div>
@@ -58,6 +62,12 @@
                     <small>Cond. Pago</small> 
                     &nbsp; {{pedido.cond_pago}}
                 </div>
+                
+                <div class="list-group-item">
+                     <small>Modalidad de pago</small>
+                      &nbsp; {{ pedido.mod_pago }}
+                </div>
+
                 <div class="list-group-item">
                     <small>Despacho</small> 
                     &nbsp; {{pedido.despacho}}
@@ -176,9 +186,11 @@
                       </p>
                     </td>
                 </tr>
+
+
                 <tr>
                     <th>
-                      <p class="text-left">IVA (12%)</p>
+                      <p class="text-left">IVA ({{pedido.iva_pc}}%)</p>
                     </th>
                     <td>
                       <p class="text-right">{{pedido.iva | formatoDinero }}</p>

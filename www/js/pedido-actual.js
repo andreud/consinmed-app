@@ -32,7 +32,10 @@ function pedidoActualCtrl(){
                 condicionesPago: '',
                 despacho:'',
                 despachoOtroTransporte: '',
-                observaciones:''
+                observaciones:'',
+                modalidadPago: 'cheque', //NUEVO cheque o transferencia
+                
+                tipoCliente: 'fabricante' // NUEVO: fabricante(P1) o distribuidor(P2)                                              
             }
         },
 
@@ -42,6 +45,23 @@ function pedidoActualCtrl(){
         
         filters: {
             formatoDinero: formatoDinero
+        },
+
+        computed: {
+
+            ivaPC: function() {
+    
+                if( this.meta.modalidadPago=='cheque' ) {
+                    return 12
+                } else if (this.meta.modalidadPago=='transferencia') {
+                    if(this.totales.baseImponible>2000000) {
+                        return 7
+                    } else {
+                        return 9
+                    }
+                }
+
+            }
         },
 
         methods: {
@@ -77,13 +97,14 @@ function pedidoActualCtrl(){
                 this.totales.totalNeto = totalBruto - descuentosParcialesMonto
                 
                 if(this.totales.descuentoGlobPC>0) {
-                    this.totales.descuentoGlobMonto = this.totales.totalNeto * (1/this.totales.descuentoGlobPC)
+                    //this.totales.descuentoGlobMonto = this.totales.totalNeto * (1/this.totales.descuentoGlobPC)
+                    this.totales.descuentoGlobMonto = this.totales.totalNeto * (this.totales.descuentoGlobPC/100)
                 } else {
                     this.totales.descuentoGlobMonto = 0
                 }
 
                 this.totales.baseImponible = this.totales.totalNeto - this.totales.descuentoGlobMonto
-                this.totales.iva = this.totales.baseImponible * 0.12
+                this.totales.iva = this.totales.baseImponible * ( this.ivaPC/100 ) //0.12
                 this.totales.totalOperacion = this.totales.baseImponible + this.totales.iva
             }
         }
@@ -120,14 +141,18 @@ function pedidoActualCtrl(){
 
         // Inserta info basica del pedido
         database.executeSql(
-            'INSERT INTO pedidos VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
+            'INSERT INTO pedidos VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             [
                 null, 
                 1, // TO-DO usuario logeado o defecto
                 PedidoActualVue.meta.cliente.id,
                 'no_enviado',
                 PedidoActualVue.meta.nOrdenCliente,
+                PedidoActualVue.meta.tipoCliente,//
+                
                 PedidoActualVue.meta.condicionesPago,
+                PedidoActualVue.meta.modalidadPago,//
+
                 PedidoActualVue.meta.despacho,
                 PedidoActualVue.meta.despachoOtroTransporte,
                 PedidoActualVue.meta.observaciones,
@@ -136,6 +161,7 @@ function pedidoActualCtrl(){
                 PedidoActualVue.totales.descuentoGlobPC,//////////
                // PedidoActualVue.totales.descuentoGlobMonto,//////////
                 PedidoActualVue.totales.baseImponible,
+                PedidoActualVue.ivaPC,
                 PedidoActualVue.totales.iva,
                 fechaGenerado
             ],
