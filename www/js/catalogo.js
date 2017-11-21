@@ -25,6 +25,28 @@ function catalogoFamiliaCtrl() {
         }
     })
 
+
+    /**
+     * Selector de tipo de cliente
+     * 
+     * @type       Vue Component
+     */
+    Vue.component('selector-tipo-cliente', {
+        template: '#selectorTipoCliente',
+        data: function(){
+            return { 
+                tipoClienteSeleccionado: ''//'fabricante' 
+            }
+        },
+        methods: {
+            tipoClienteFueSeleccionado: function() {
+                this.$emit('tiposeleccionado', this.tipoClienteSeleccionado)
+            }
+        }
+
+    })
+
+
     /**
      * Selector de porcentaje descuento a familia
      * 
@@ -46,6 +68,7 @@ function catalogoFamiliaCtrl() {
 	    data: {
             clientes: [],
             clienteSeleccionadoID: '',
+            tipoCliente: '',
             marca: {},
             familias: []
         },
@@ -54,9 +77,16 @@ function catalogoFamiliaCtrl() {
         },
 	    methods: {
 	    	familiaVisible: function (familia) {		
-	    		familia.visible=!familia.visible;
-	    	},
-	    	actualizarPedido: function(familias) {	
+	   
+                if( this.tipoCliente == '' ) {
+                    alert('Debe seleccionar tipo de cliente')
+                } else {
+                    familia.visible=!familia.visible                    
+                }
+	    	
+            },
+	    	
+            actualizarPedido: function(familias) {	
 
                 if(!this.validaActualizarPedidio()) return
 
@@ -80,6 +110,7 @@ function catalogoFamiliaCtrl() {
                 localStorage.setItem("productosSelecMarca", JSON.stringify(familiasProductosSelecMarca) )
 	    		window.location.href = 'pedido-actual.html'
 	    	},
+            
             validaActualizarPedidio: function() {
                 if(this.clienteSeleccionadoID=='') {
                     alert('Debe seleccionar un cliente para continuar.')
@@ -90,6 +121,10 @@ function catalogoFamiliaCtrl() {
             actualizaCliente: function (IdCliente) {
                 localStorage.setItem("IdClienteCatalogo", IdCliente)
                 this.clienteSeleccionadoID = IdCliente 
+            },
+            actualizaTipoCliente: function(tipoCliente) {
+                localStorage.setItem("tipoClienteCatalogo", tipoCliente)
+                this.tipoCliente = tipoCliente
             }
         
 	    }

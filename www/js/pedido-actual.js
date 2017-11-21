@@ -2,6 +2,7 @@ function pedidoActualCtrl(){
 
     var idMarca = localStorage.getItem("marcaCatalogo")
     var idCliente = localStorage.getItem("IdClienteCatalogo")
+    var tipoCliente = localStorage.getItem("tipoClienteCatalogo")
     var productosSelecMarca = JSON.parse(localStorage.getItem("productosSelecMarca"))
        
 	/**
@@ -35,7 +36,7 @@ function pedidoActualCtrl(){
                 observaciones:'',
                 modalidadPago: 'cheque', //NUEVO cheque o transferencia
                 
-                tipoCliente: 'fabricante' // NUEVO: fabricante(P1) o distribuidor(P2)                                              
+                tipoCliente: tipoCliente // NUEVO: fabricante(P1) o distribuidor(P2)                                              
             }
         },
 

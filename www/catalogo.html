@@ -22,6 +22,7 @@
 
             <div class="container">                    
                 <selector-clientes v-bind:clientes="clientes" v-on:seleccionado="actualizaCliente"></selector-clientes>
+                <selector-tipo-cliente v-on:tiposeleccionado="actualizaTipoCliente"></selector-tipo-cliente>
                 <hr>
             </div>
 
@@ -90,6 +91,18 @@
                    </option>
                 </select>
             </div>
+        </script>
+
+        <!-- Vue Template selectorTipoCliente -->
+        <script id="selectorTipoCliente" type="text/x-template">
+            <div  class="form-group row" >
+                <label for="" class="col-4 col-form-label">Tipo</label>
+                <select v-model="tipoClienteSeleccionado" class="col-8 form-control" 
+                    v-on:change="tipoClienteFueSeleccionado">
+                   <option value="fabricante">Fabricante</option>
+                   <option value="distribuidor">Distribuidor</option>
+                </select>
+            </div>            
         </script>
 
 
