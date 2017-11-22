@@ -164,7 +164,7 @@ function sincronizarCtrl() {
                             // producto ya existe en local, updatear
                             console.log('producto ' + producto.nombre + producto.id + ' YA existe en local, updatear')
                             database.executeSql(
-                                'UPDATE productos SET id_familias=?,codigo=?,nombre=?,cajas_x_bulto=?,unid_x_caja=?,precio_bulto=?,orden=? WHERE id=?', 
+                                'UPDATE productos SET id_familias=?,codigo=?,nombre=?,cajas_x_bulto=?,unid_x_caja=?,precio_bulto=?,precio_bulto_dist=?,orden=? WHERE id=?', 
                                 [
                                     producto.id_familias,
                                     producto.codigo,
@@ -172,6 +172,7 @@ function sincronizarCtrl() {
                                     producto.cajas_x_bulto,
                                     producto.unid_x_caja,
                                     producto.precio_bulto,
+                                    producto.precio_bulto,//_dist
                                     producto.orden,
                                     producto.id//Where
                                 ]
@@ -179,7 +180,7 @@ function sincronizarCtrl() {
                         } else if(rsProducto.rows.length==0) {
                             // producto no existe en local, insertar
                             console.log('producto ' + producto.nombre + producto.id + ' NO existe en local, insertar')
-                            database.executeSql('INSERT INTO productos VALUES (?,?,?,?,?,?,?,?,?)', [
+                            database.executeSql('INSERT INTO productos VALUES (?,?,?,?,?,?,?,?,?,?)', [
                                 producto.id,
                                 producto.id_familias,
                                 producto.codigo,
@@ -188,6 +189,7 @@ function sincronizarCtrl() {
                                 producto.cajas_x_bulto,
                                 producto.unid_x_caja,
                                 producto.precio_bulto,
+                                producto.precio_bulto,//_dist
                                 producto.orden
                             ])
                         }

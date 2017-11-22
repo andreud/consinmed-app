@@ -4,7 +4,10 @@ function pedidoActualCtrl(){
     var idCliente = localStorage.getItem("IdClienteCatalogo")
     var tipoCliente = localStorage.getItem("tipoClienteCatalogo")
     var productosSelecMarca = JSON.parse(localStorage.getItem("productosSelecMarca"))
-       
+    
+    //TO-DO: mezclar los productos seleccionados de todas las marcas
+
+
 	/**
      * PedidoActualVue
      *
@@ -35,7 +38,6 @@ function pedidoActualCtrl(){
                 despachoOtroTransporte: '',
                 observaciones:'',
                 modalidadPago: 'cheque', //NUEVO cheque o transferencia
-                
                 tipoCliente: tipoCliente // NUEVO: fabricante(P1) o distribuidor(P2)                                              
             }
         },
@@ -72,30 +74,41 @@ function pedidoActualCtrl(){
                 var totalBruto = 0,
                     descuentosParcialesMonto = 0
 
-                // Recorre Familias - Productos, acumula totales y dscuentos por familia y finales
+                // Recorre Familias - Productos, acumula totales y dscuentos por producto, familia y finales
                 this.familias.forEach(function(familia) {
-                    var totalBrutoFamilia = 0,
+                    
+                    var totalBrutoFamilia = 0,//
+                        totalFamilia = 0,
                         descuentoFamiliaMonto = 0
-
+                   
                     familia.productos.forEach(function(producto){
+                        var descuentoProductoMonto = 0
+                        // TO-DO: implementar var precioEnUso para precio1/precio2
+                        //var precioEnUso = (tipoCliente=='distribuidor') ? producto.precio_bulto_dist : producto.precio_bulto ;
+                        // TO-DO: remover el parseInt porqeu elimina lso decimales si los hay
                         totalBrutoProducto =  parseInt(producto.precio_bulto*producto.cantidad)
-                        producto.total = totalBrutoProducto
-                        totalBrutoFamilia = parseInt(totalBrutoFamilia) + totalBrutoProducto 
+                        
+                        if(producto.descuentoPC==0){
+                            producto.total = totalBrutoProducto
+                        } else {
+                            descuentoProductoMonto = (totalBrutoProducto*(producto.descuentoPC/100))
+                            producto.total = totalBrutoProducto - descuentoProductoMonto
+                        }
+                        
+                        totalBrutoFamilia = parseInt(totalBrutoFamilia) + totalBrutoProducto// 
+                        totalFamilia = parseInt(totalFamilia) + producto.total 
+                        descuentoFamiliaMonto = parseInt(descuentoFamiliaMonto) + descuentoProductoMonto
                     })
-                    familia.total = totalBrutoFamilia
-                    totalBruto = totalBruto + totalBrutoFamilia
-
-                    // Aplica descuento a la famila 
-                    if(familia.descuentoPC!=0) {
-                        descuentoFamiliaMonto = totalBrutoFamilia * (parseInt(familia.descuentoPC)/100)
-                        descuentosParcialesMonto = descuentosParcialesMonto + descuentoFamiliaMonto 
-                    }
-
+                    
+                    familia.total = totalFamilia
+                    totalBruto = totalBruto + totalFamilia
+                    descuentosParcialesMonto = descuentosParcialesMonto + descuentoFamiliaMonto 
+                    
                 })
 
                 this.totales.totalBruto = totalBruto
-                this.totales.totalDescuentosParciales = descuentosParcialesMonto
-                this.totales.totalNeto = totalBruto - descuentosParcialesMonto
+                this.totales.totalDescuentosParciales = descuentosParcialesMonto // TO-DO: calcular y tomar este valor de los descuentos a nivel de producto
+                this.totales.totalNeto = totalBruto - descuentosParcialesMonto // TO-DO: 
                 
                 if(this.totales.descuentoGlobPC>0) {
                     //this.totales.descuentoGlobMonto = this.totales.totalNeto * (1/this.totales.descuentoGlobPC)

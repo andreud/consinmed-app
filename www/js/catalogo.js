@@ -57,6 +57,22 @@ function catalogoFamiliaCtrl() {
         props: ['familia'] 
     })
 
+    /**
+     * Selector de porcentaje descuento a un producto
+     * 
+     * @type       Vue Component
+     */
+    Vue.component( 'selector-descuento-producto', {
+        template: '#selectorDescuentoProducto',
+        props: ['producto']
+        /*,
+        methods: {
+
+        }*/
+    })
+
+
+
 
     /**
      * Catalogo Marca
@@ -73,17 +89,15 @@ function catalogoFamiliaCtrl() {
             familias: []
         },
         filters: {
-            formatoDinero: formatoDinero
+            formatoDinero: formatoDinero,
         },
 	    methods: {
 	    	familiaVisible: function (familia) {		
-	   
                 if( this.tipoCliente == '' ) {
                     alert('Debe seleccionar tipo de cliente')
                 } else {
                     familia.visible=!familia.visible                    
                 }
-	    	
             },
 	    	
             actualizarPedido: function(familias) {	
@@ -118,10 +132,12 @@ function catalogoFamiliaCtrl() {
                 }
                 return true;
             },
+            
             actualizaCliente: function (IdCliente) {
                 localStorage.setItem("IdClienteCatalogo", IdCliente)
                 this.clienteSeleccionadoID = IdCliente 
             },
+            
             actualizaTipoCliente: function(tipoCliente) {
                 localStorage.setItem("tipoClienteCatalogo", tipoCliente)
                 this.tipoCliente = tipoCliente
@@ -187,6 +203,8 @@ function catalogoFamiliaCtrl() {
                 cajas_x_bulto: producto.cajas_x_bulto,//producto.caj_x_bulto,
                 unid_x_caja: producto.unid_x_caja,//producto.unid_x_caja,
                 precio_bulto: producto.precio_bulto,//producto.precio_bulto,
+                precio_bulto_dist: producto.precio_bulto_dist,//NUEVO
+                descuentoPC: 0,//NUEVO                                                                             
                 cantidad: ''
             }
             this.productos.push(productoF)

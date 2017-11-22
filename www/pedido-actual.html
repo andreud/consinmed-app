@@ -39,7 +39,8 @@
                             <th>Caj x Bulto</th>
                             <th>Unid x Caja</th>
                             <th>Precio Bulto</th>
-                            <th width="80px">Cant</th>
+                            <th width="80px">Cant.</th>
+                            <th>Desc.</th>
                             <th>Total</th>
                         </tr>
                     </thead>
@@ -51,15 +52,17 @@
                             <td class="text-center">{{producto.unid_x_caja}}</td>
                             <td class="text-right">{{producto.precio_bulto | formatoDinero }}</td>
                             <td class="text-center">{{producto.cantidad}}</td>
+                            <td>{{producto.descuentoPC}}%</td>
                             <td class="text-right">{{producto.total | formatoDinero }}</td>
                         </tr>
                     </tbody>
                 </table>
 
-                <small>Total Bruto {{familia.nombre}}: {{familia.total | formatoDinero }}</small><br>
-                <small v-if="familia.descuentoPC>0">
+                <small>Total {{familia.nombre}}: {{familia.total | formatoDinero }}</small><br>
+                
+                <!-- <small v-if="familia.descuentoPC>0">
                   Descuento {{familia.nombre}}: {{ familia.total*(1/familia.descuentoPC) | formatoDinero }} 
-                </small>
+                </small> -->
                 
 
                 <hr>                      
@@ -105,7 +108,9 @@
                          <option value="20">20%</option>
                          <option value="25">25%</option>
                          <option value="30">30%</option>
+                         <option value="35">35%</option>
                          <option value="40">40%</option>
+                         <option value="45">45%</option>
                          <option value="50">50%</option>
                       </select>
 

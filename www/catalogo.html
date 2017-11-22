@@ -45,6 +45,7 @@
                                 <th>Unid x Caja</th>
                                 <th>Precio Bulto</th>
                                 <th width="80px">Agregar</th>
+                                <th>Descuento</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,7 +56,10 @@
                                 <td class="text-center">{{producto.unid_x_caja}}</td>
                                 <td class="text-right">{{ producto.precio_bulto | formatoDinero }}</td>
                                 <td>
-                                    <input type="number" v-model="producto.cantidad" placeholder="0"class="form-control">
+                                    <input type="number" v-model="producto.cantidad" placeholder="0" class="form-control">
+                                </td>
+                                <td class="text-center">
+                                    <selector-descuento-producto v-bind:producto="producto"></selector-descuento-producto>
                                 </td>
                             </tr>
                         </div>
@@ -79,6 +83,10 @@
         </div>
         <!-- fin VUE catalogoMarca -->
 
+
+        <!-- 
+            Vue Components Templates
+         -->
 
         <!-- Vue Template selectorClientes -->
         <script id="selectorClientes" type="text/x-template" >
@@ -113,16 +121,40 @@
                     <p style="text-align:right">Descuento {{familia.nombre}}</p>
                 </label>
                 <select v-model="familia.descuentoPC" class="form-control col-3" >
-                   <option value="0">--</option>
-                   <option value="5">5%</option>
-                   <option value="10">10%</option>
-                   <option value="15">15%</option>
-                   <option value="20">20%</option>
-                   <option value="25">25%</option>
-                   <option value="30">30%</option>
+                    <option value="0">--</option>
+                    <option value="5">5%</option>
+                    <option value="10">10%</option>
+                    <option value="15">15%</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                    <option value="30">30%</option>
+                    <option value="35">35%</option>
+                    <option value="40">40%</option>
+                    <option value="45">45%</option>
+                    <option value="50">50%</option>
                 </select>
             </div>
         </script>
+
+        <!-- Vue Template selectorDescuentoProducto -->
+        <script id="selectorDescuentoProducto" type="text/x-template" >
+            <div class="form-group row">
+                <select v-model="producto.descuentoPC" class="form-control" style="display:inline;width:50px;font-size:12px;padding:1px" >
+                    <option value="0">--</option>
+                    <option value="5">5%</option>
+                    <option value="10">10%</option>
+                    <option value="15">15%</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                    <option value="30">30%</option>
+                    <option value="35">35%</option>
+                    <option value="40">40%</option>
+                    <option value="45">45%</option>
+                    <option value="50">50%</option>
+                </select>
+            </div>
+        </script>
+
 
 
         <script src="cordova.js"></script>
