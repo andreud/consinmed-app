@@ -2,3 +2,6 @@ platforms/
 plugins/
 *.log
 *.db
+
+node_modules/
+package-lock.json

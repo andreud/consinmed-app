@@ -1,0 +1,19 @@
+{
+  "name": "io.consinmed.vendedor",
+  "version": "1.0.0",
+  "displayName": "CONSINMED",
+  "cordova": {
+    "platforms": [
+      "browser",
+      "android"
+    ],
+    "plugins": {
+      "cordova-sqlite-ext": {}
+    }
+  },
+  "dependencies": {
+    "cordova-android": "^6.3.0",
+    "cordova-browser": "~5.0.1",
+    "cordova-sqlite-ext": "~0.10.5"
+  }
+}
