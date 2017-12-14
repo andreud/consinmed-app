@@ -142,6 +142,15 @@ function catalogoFamiliaCtrl() {
             actualizaTipoCliente: function(tipoCliente) {
                 localStorage.setItem("tipoClienteCatalogo", tipoCliente)
                 this.tipoCliente = tipoCliente
+
+                //Determina si usar precio Fabricante o Distribuidor en los productos
+                this.familias.forEach( function(familia){                
+                    familia.productos.forEach( function(producto){
+                        producto.precioEnUso = (tipoCliente=='distribuidor') ? producto.precio_bulto_dist : producto.precio_bulto ;
+                    })
+                })
+
+                
             }
         
 	    }
@@ -205,7 +214,8 @@ function catalogoFamiliaCtrl() {
                 unid_x_caja: producto.unid_x_caja,//producto.unid_x_caja,
                 precio_bulto: producto.precio_bulto,//producto.precio_bulto,
                 precio_bulto_dist: producto.precio_bulto_dist,//NUEVO
-                descuentoPC: 0,//NUEVO                                                                             
+                precioEnUso: 0,//NUEVO
+                descuentoPC: 0,//NUEVO                                                      
                 cantidad: ''
             }
             this.productos.push(productoF)

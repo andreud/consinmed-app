@@ -84,11 +84,10 @@ function pedidoActualCtrl(){
                    
                     familia.productos.forEach(function(producto){
                         var descuentoProductoMonto = 0
-                        // TO-DO: implementar var precioEnUso para precio1/precio2
-                        //var precioEnUso = (tipoCliente=='distribuidor') ? producto.precio_bulto_dist : producto.precio_bulto ;
                         // TO-DO: remover el parseInt porqeu elimina lso decimales si los hay
-                        totalBrutoProducto =  parseInt(producto.precio_bulto*producto.cantidad)
-                        
+                        //totalBrutoProducto = parseInt(producto.precio_bulto*producto.cantidad)
+                        totalBrutoProducto = parseInt(producto.precioEnUso*producto.cantidad)
+
                         if(producto.descuentoPC==0){
                             producto.total = totalBrutoProducto
                         } else {
@@ -230,7 +229,8 @@ function pedidoActualCtrl(){
                     newPedidoFamiliaID,
                     producto.id,
                     producto.cantidad,
-                    producto.precio_bulto, // sin el descuento, Implementar precioEnUso (dist/fabr)
+                    //producto.precio_bulto, // sin el descuento, Implementar precioEnUso (dist/fabr)
+                    producto.precioEnUso, // sin el descuento,
                     producto.descuentoPC // Nuevo
                     //producto.total // total con dcto?
                 ], 
