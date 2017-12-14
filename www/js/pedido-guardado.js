@@ -34,7 +34,7 @@ function pedidoGuardadoCtrl(){
             familiaF = {
                 id: familiaPedido.id_familias,
                 nombre: '',
-                descuentoPC: familiaPedido.descuento_pc,
+                descuentoPC: familiaPedido.descuento_pc, //deprecado
                 visible:false,
                 productos: []
                 ,totalFamilia: 0.0                
