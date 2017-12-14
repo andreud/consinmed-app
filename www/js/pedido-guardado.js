@@ -50,7 +50,8 @@ function pedidoGuardadoCtrl(){
             /*database.executeSql('SELECT * FROM pedidos_familias_productos WHERE id_pedidos_familias='+familiaPedido.id, [], familiasProductosSqlCallback.bind(familiaF) )*/
             // con join al registro de productos:
             database.executeSql(
-                'SELECT productos.*, pedidos_familias_productos.precio_bulto AS ped_precio_bulto, pedidos_familias_productos.cantidad AS ped_cantidad FROM pedidos_familias_productos JOIN productos ON productos.id=pedidos_familias_productos.id_productos WHERE id_pedidos_familias='+familiaPedido.id, 
+                //'SELECT productos.*, pedidos_familias_productos.precio_bulto AS ped_precio_bulto, pedidos_familias_productos.cantidad AS ped_cantidad FROM pedidos_familias_productos JOIN productos ON productos.id=pedidos_familias_productos.id_productos WHERE id_pedidos_familias='+familiaPedido.id, 
+                'SELECT productos.*, pedidos_familias_productos.precio_bulto AS ped_precio_bulto, pedidos_familias_productos.descuento_pc AS prod_dcto_pc , pedidos_familias_productos.cantidad AS ped_cantidad FROM pedidos_familias_productos JOIN productos ON productos.id=pedidos_familias_productos.id_productos WHERE id_pedidos_familias='+familiaPedido.id, 
                 [], 
                 familiasProductosSqlCallback.bind(familiaF) 
             )
@@ -70,7 +71,16 @@ function pedidoGuardadoCtrl(){
         var totFam = 0
         for(var x = 0; x < rsFamiliaProductosPedido.rows.length; x++) {
             productoPedido = rsFamiliaProductosPedido.rows.item(x)
-            console.log(productoPedido)
+            //console.log(productoPedido)
+            
+            var descuentoPC = productoPedido.prod_dcto_pc
+            var totalProducto = productoPedido.ped_precio_bulto * productoPedido.ped_cantidad
+            if(descuentoPC!=0){
+                //totalProducto = totalProducto * (descuentoPC/100)
+                montoDescuentoProducto = totalProducto * (descuentoPC/100)
+                totalProducto = totalProducto - montoDescuentoProducto
+            }
+
             productoF = {
                 //id: productoPedido.id,
                 
@@ -79,8 +89,10 @@ function pedidoGuardadoCtrl(){
                 cajas_x_bulto: productoPedido.cajas_x_bulto,//producto.caj_x_bulto,
                 unid_x_caja: productoPedido.unid_x_caja,//producto.unid_x_caja,
                 
-                precio_bulto: productoPedido.ped_precio_bulto,// el rpeco bulto del product agregado al pedido
-                cantidad: productoPedido.ped_cantidad
+                precio_bulto: productoPedido.ped_precio_bulto,// el rpeco bulto del product agregado al pedido, TO-DO: implementar precioEnUso
+                cantidad: productoPedido.ped_cantidad,
+                descuentoPC: descuentoPC,
+                total: totalProducto // calcular aqui o guardar en bd
             
             }
             totFam = totFam + (productoPedido.ped_precio_bulto*productoPedido.ped_cantidad)

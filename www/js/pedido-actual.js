@@ -73,6 +73,7 @@ function pedidoActualCtrl(){
             totalizar: function() {
                 var totalBruto = 0,
                     descuentosParcialesMonto = 0
+                    //descuentosParcialesPPMonto = 0
 
                 // Recorre Familias - Productos, acumula totales y dscuentos por producto, familia y finales
                 this.familias.forEach(function(familia) {
@@ -101,13 +102,16 @@ function pedidoActualCtrl(){
                     })
                     
                     familia.total = totalFamilia
-                    totalBruto = totalBruto + totalFamilia
+                    familia.totalBruto = totalBrutoFamilia
+                    totalBruto = totalBruto + totalBrutoFamilia
                     descuentosParcialesMonto = descuentosParcialesMonto + descuentoFamiliaMonto 
-                    
+                    //descuentosParcialesPPMonto = descuentosParcialesPPMonto + descuentoFamiliaMonto
+
                 })
 
                 this.totales.totalBruto = totalBruto
                 this.totales.totalDescuentosParciales = descuentosParcialesMonto // TO-DO: calcular y tomar este valor de los descuentos a nivel de producto
+                //this.
                 this.totales.totalNeto = totalBruto - descuentosParcialesMonto // TO-DO: 
                 
                 if(this.totales.descuentoGlobPC>0) {
@@ -198,7 +202,7 @@ function pedidoActualCtrl(){
                     null,
                     idNuevoPedido,
                     familiaProductos.id,
-                    familiaProductos.descuentoPC
+                    familiaProductos.descuentoPC// deprecado como fuente de descuentos
                 ], 
                 insertProductosCallback.bind(familiaProductos.productos) 
             )
@@ -214,16 +218,21 @@ function pedidoActualCtrl(){
             if( !producto  ){
                 insertFamiliasProductosCallback(globalRsPedido)
             }
+            //TO-DO: Implementar precioEnUso
+            //var precioEnUso = ('distribuidor') ? producto.precio_bulto : producto.precio_bulto_dist 
+            
 
             boundInsertProductosCallback = insertProductosCallback.bind(this)
 
             database.executeSql(
-                'INSERT INTO pedidos_familias_productos VALUES (?,?,?,?,?)',[
+                'INSERT INTO pedidos_familias_productos VALUES (?,?,?,?,?,?)',[
                     null,
                     newPedidoFamiliaID,
                     producto.id,
                     producto.cantidad,
-                    producto.precio_bulto
+                    producto.precio_bulto, // sin el descuento, Implementar precioEnUso (dist/fabr)
+                    producto.descuentoPC // Nuevo
+                    //producto.total // total con dcto?
                 ], 
                 function(){
                     boundInsertProductosCallback(rsInsertFamilia)

@@ -115,9 +115,10 @@ function catalogoFamiliaCtrl() {
 		    			familiasProductosSelecMarca.push({
 		    				id: familia.id,
                             nombre: familia.nombre,
-		    				descuentoPC: parseInt(familia.descuentoPC),
+		    				descuentoPC: parseInt(familia.descuentoPC),//deprecado como principal fuente del descuento, que pasa a nivel de producto
 		    				productos: productosSeleccionados,
-                            total: 0
+                            total: 0,
+                            totalBruto: 0 // NUEVO
 		    			})
 		    		}
                 })
@@ -179,7 +180,7 @@ function catalogoFamiliaCtrl() {
             familiaF = {
                 id: familia.id,
                 nombre: familia.nombre,
-                descuentoPC: 0,
+                descuentoPC: 0,// //deprecado como principal fuente del descuento, que pasa a nivel de producto
                 visible:false,
                 productos: []
             }

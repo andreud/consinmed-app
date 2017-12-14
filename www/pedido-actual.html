@@ -26,9 +26,9 @@
             <div v-for="familia in familias" >
                 <h4 class="h-familia">
                   {{familia.nombre}}
-                  <small v-if="familia.descuentoPC!='0'"> 
+                  <!-- <small v-if="familia.descuentoPC!='0'"> 
                       <br>Descuento: {{familia.descuentoPC}} %
-                  </small>    
+                  </small> -->    
                 </h4>
                 
                 <table class="table table-striped table-responsive">
@@ -58,6 +58,7 @@
                     </tbody>
                 </table>
 
+                <small>Total Bruto {{familia.nombre}}: {{familia.totalBruto | formatoDinero }}</small><br>
                 <small>Total {{familia.nombre}}: {{familia.total | formatoDinero }}</small><br>
                 
                 <!-- <small v-if="familia.descuentoPC>0">

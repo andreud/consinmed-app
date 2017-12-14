@@ -4,10 +4,10 @@
 - Agregado el campo pedidos.mod_pago (falta backend)
 - Agregado el campo pedidos.tipo_cliente (falta backend)
 - Agregado el campo producto.precio_bulto_dist (falta backend y sync)
+- Agreagdo el campo pedidos_familias_productos.descuento_pc (falta backend )
 
 por hacer
 
-- Agreagr el campo pedidos_familias_productos.descuento_pc ?
 
 
 Notas para consinmed 
@@ -24,7 +24,6 @@ haciendo
 -el tipo de cliente que se seleccione debe afectar a si se muetsra precio_bulto o precio_bulto_dist
 en catalogo y pedido-actual
 -descuento porcentual a nivel de producto
-	- BUG: el total descuentos parciales se esta restando dos veces
 	- permitir seleccionar un porcentaje de descuento a todos los productos de una familia
 	- mostrar el monto descontado por familia
 
