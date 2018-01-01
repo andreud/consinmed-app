@@ -189,8 +189,7 @@ function sincronizarCtrl() {
                                 producto.cajas_x_bulto,
                                 producto.unid_x_caja,
                                 producto.precio_bulto,
-                                //producto.precio_bulto,//_dist
-                                9999,
+                                9999,//producto.precio_bulto_dist
                                 producto.orden
                             ])
                         }

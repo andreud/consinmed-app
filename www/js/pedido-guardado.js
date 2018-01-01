@@ -6,7 +6,10 @@ function pedidoGuardadoCtrl(){
         cliente: {},
         familiasProductos: [],
         formEnviarVisible: false,
-        marcas: '' //para probar el api
+        marcas: '', //para probar el api
+        enviar: {
+            response: ''
+        }
     }
 
 
@@ -82,14 +85,14 @@ function pedidoGuardadoCtrl(){
             }
 
             productoF = {
-                //id: productoPedido.id,
+                id_producto: productoPedido.id,// id del producto en la tabla productos
                 
                 nombre: productoPedido.nombre,
                 codigo: productoPedido.codigo,
                 cajas_x_bulto: productoPedido.cajas_x_bulto,//producto.caj_x_bulto,
                 unid_x_caja: productoPedido.unid_x_caja,//producto.unid_x_caja,
                 
-                precio_bulto: productoPedido.ped_precio_bulto,// el rpeco bulto del product agregado al pedido, TO-DO: implementar precioEnUso
+                precio_bulto: productoPedido.ped_precio_bulto,// el precio bulto del product agregado al pedido, TO-DO: implementar precioEnUso
                 cantidad: productoPedido.ped_cantidad,
                 descuentoPC: descuentoPC,
                 total: totalProducto // calcular aqui o guardar en bd
@@ -141,12 +144,20 @@ function pedidoGuardadoCtrl(){
                     //var url = 'http://localhost/consinmed-panel/public/api/pedido/create'
                     var url = apiBaseUrl + 'pedidos'
                     var vm = this
-                    /*axios.get(url)
+                    axios.post(url,{
+                            pedido: vm.pedido,
+                            //pedido_marcas: '',
+                            pedido_familias_productos: vm.familiasProductos
+
+                        })
                         .then( function(res) {
-                            vm.marcas = JSON.stringify(res)
+                            //vm.marcas = JSON.stringify(res)
+                            //
+                            console.log(res)
+                            vm.enviar.response = res
                         }).catch(function (error) {
-                            console.log(error);
-                        });*/
+                            console.log(error)
+                        });
                      
                 } else {
 

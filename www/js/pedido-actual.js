@@ -33,8 +33,8 @@ function pedidoActualCtrl(){
             meta:{
                 cliente: {},
                 nOrdenCliente: '',
-                condicionesPago: '',
-                despacho:'',
+                condicionesPago: '--',
+                despacho:'--',
                 despachoOtroTransporte: '',
                 observaciones:'',
                 modalidadPago: 'cheque', //NUEVO cheque o transferencia

@@ -213,7 +213,12 @@
                 <div v-show="formEnviarVisible">
                 
                     <p>Enviando...</p>
-                    {{ marcas }}
+
+                    <div v-if="enviar.response!=''">
+                        {{enviar.response}}
+                    </div>
+                    <!-- {{ marcas }} -->
+
                     <!-- <p>
                         <input type="checkbox" >
                         Ciente
